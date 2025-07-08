@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="api/tests/bootstrap.php"
+         colors="true"
+         verbose="true">
+    <testsuites>
+        <testsuite name="App Test Suite">
+            <directory>api/tests</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <env name="DB_HOST" value="localhost"/>
+        <env name="DB_PORT" value="5432"/>
+        <env name="DB_NAME" value="dbGestionJL"/>
+        <env name="DB_USER" value="postgres"/>
+        <env name="DB_PASS" value="upt2025"/>
+        <env name="JWT_SECRET" value="test_secret"/>
+        <env name="APP_ENV"   value="testing"/>
+    </php>
+</phpunit>

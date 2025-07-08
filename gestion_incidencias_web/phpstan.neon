@@ -1,0 +1,12 @@
+parameters:
+  level: max            
+  paths:
+    - admin/
+    - api/
+    - phpstan-stubs.php
+
+  excludePaths:
+    - admin/reporte/fpdf/*  
+    - admin/reporte/fpdf/tutorial/* 
+    - admin/reporte/generar_excel.php
+    - admin/reporte/generar_pdf.php
