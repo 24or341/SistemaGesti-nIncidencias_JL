@@ -20,19 +20,18 @@
                     i.descripcion,
                     i.latitud,
                     i.longitud,
-                    TO_CHAR(i.fecha_reporte,'YYYY-MM-DD') AS fecha_reporte,
-                    TO_CHAR(c.fecha_programada, 'YYYY-MM-DD') AS fecha_programada
+                    TO_CHAR(i.fecha_reporte, 'YYYY-MM-DD') AS fecha_reporte
                 FROM incidencia i
                 JOIN tipo_incidencia    ti ON i.tipo_id      = ti.id
                 JOIN estado_incidencia  ei ON i.estado_id    = ei.id
                 LEFT JOIN prioridad     pr ON i.prioridad_id = pr.id
-                LEFT JOIN calendario_incidencia c ON i.id = c.incidencia_id
                 ORDER BY i.fecha_reporte ASC
             ";
 
             $stmt = $pdo->query($sql);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
+
 
         public static function asignarEmpleado(int $incidenciaId, int $empleadoId, int $prioridadId, ?string $fechaProgramada = null): bool
         {

@@ -8,12 +8,14 @@
         Response::error("Método no permitido", 405);
     }
 
-    $input = json_decode(file_get_contents("php://input"), true);
-    $celular = $input['celular'] ?? null;
+    $raw = file_get_contents("php://input");
+    $input = json_decode($raw, true);
 
-    if (empty($celular)) {
+    if (!is_array($input) || !isset($input['celular']) || empty($input['celular'])) {
         Response::error("Número de teléfono requerido", 422);
     }
+
+    $celular = $input['celular'];
 
     CiudadanoController::validarTelefono($celular);
 ?>
