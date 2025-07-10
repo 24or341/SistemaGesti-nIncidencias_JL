@@ -5,14 +5,16 @@ import '../viewmodels/detalle_incidencia_viewmodel.dart';
 
 class DetalleIncidenciaScreen extends StatefulWidget {
   final int incidenciaId;
-  final int empleadoId;
+  final int usuarioId;
   final String token;
+  final String role; // <- CAMBIO AQUÍ
 
   const DetalleIncidenciaScreen({
     super.key,
     required this.incidenciaId,
-    required this.empleadoId,
+    required this.usuarioId,
     required this.token,
+    required this.role, // <- CAMBIO AQUÍ
   });
 
   @override
@@ -26,7 +28,13 @@ class _DetalleIncidenciaScreenState extends State<DetalleIncidenciaScreen> {
   void initState() {
     super.initState();
     _viewModel = DetalleIncidenciaViewModel();
-    _viewModel.cargarDetalle(widget.empleadoId, widget.incidenciaId, widget.token);
+
+    _viewModel.cargarDetalle(
+      widget.usuarioId,
+      widget.incidenciaId,
+      widget.token,
+      widget.role, // <- CAMBIO AQUÍ
+    );
   }
 
   @override
@@ -73,7 +81,6 @@ class _DetalleIncidenciaScreenState extends State<DetalleIncidenciaScreen> {
                     _buildSection('Estado', incidencia['estado']),
                     _buildSection('Fecha de Reporte', incidencia['fecha_reporte']),
                     const SizedBox(height: 16),
-
                     if (incidencia['foto'] != null && incidencia['foto'] is Uint8List)
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,9 +108,7 @@ class _DetalleIncidenciaScreenState extends State<DetalleIncidenciaScreen> {
                       )
                     else
                       const Text('No hay imagen disponible.', style: TextStyle(color: Colors.white70)),
-
                     const SizedBox(height: 24),
-
                     if (incidencia['latitud'] != null && incidencia['longitud'] != null)
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

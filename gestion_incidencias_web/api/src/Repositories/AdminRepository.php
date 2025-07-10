@@ -44,6 +44,26 @@
             ]);
             return (int)$stmt->fetchColumn();
         }
+
+        public static function actualizar(int $id, string $nombre, string $apellido, string $correo, ?string $dni): void {
+            $pdo = Database::getInstance();
+            $stmt = $pdo->prepare("
+                UPDATE usuario
+                SET nombre = :nombre,
+                    apellido = :apellido,
+                    email = :correo,
+                    dni = :dni
+                WHERE id = :id AND rol = 'administrador'
+            ");
+            $stmt->execute([
+                'nombre'   => $nombre,
+                'apellido' => $apellido,
+                'correo'   => $correo,
+                'dni'      => $dni,
+                'id'       => $id
+            ]);
+        }
+
     }
 
 ?>

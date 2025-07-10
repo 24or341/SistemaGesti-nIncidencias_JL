@@ -9,12 +9,25 @@
         public static function listar(): void
         {
             try {
-                $data = IncidenciaService::obtenerTodas();
-                Response::success($data, "Listado de incidencias");
+                $incidencias = IncidenciaService::obtenerTodas();
+
+                foreach ($incidencias as &$incidencia) {
+                    if (isset($incidencia['foto']) && !empty($incidencia['foto'])) {
+                        if (is_resource($incidencia['foto'])) {
+                            $binario = stream_get_contents($incidencia['foto']);
+                            $incidencia['foto'] = base64_encode($binario);
+                        } else {
+                            $incidencia['foto'] = base64_encode($incidencia['foto']);
+                        }
+                    }
+                }
+
+                Response::success($incidencias, "Listado de incidencias");
             } catch (\Exception $e) {
                 Response::error("Error al obtener incidencias: " . $e->getMessage(), 500);
             }
         }
+
 
         public static function actualizarEstado(array $data): void
         {

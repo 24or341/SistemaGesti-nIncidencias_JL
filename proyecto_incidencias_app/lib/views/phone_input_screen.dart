@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../viewmodels/phone_input_viewmodel.dart';
-import 'ciudadano_home.dart';
+import 'historial_screen.dart'; // Redirige a historial personal
+import '../main.dart';
 
 class PhoneInputScreen extends StatelessWidget {
   const PhoneInputScreen({super.key});
@@ -21,11 +22,25 @@ class PhoneInputScreen extends StatelessWidget {
         child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            title: const Text('Ingreso de Teléfono'),
+            title: const Text('Buscar mis incidencias'),
             backgroundColor: Colors.teal.shade700,
             foregroundColor: Colors.white,
             elevation: 0,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.logout),
+                tooltip: 'Salir al inicio',
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (_) => const WelcomeScreen()),
+                    (route) => false,
+                  );
+                },
+              ),
+            ],
           ),
+
           body: Consumer<PhoneInputViewModel>(
             builder: (context, viewModel, child) {
               return Padding(
@@ -75,11 +90,11 @@ class PhoneInputScreen extends StatelessWidget {
                                     if (!context.mounted) return;
 
                                     if (success && viewModel.ciudadanoId != null) {
-                                      Navigator.pushReplacement(
+                                      Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => CiudadanoHome(
-                                            user: {'id_celular': viewModel.ciudadanoId!},
+                                          builder: (context) => HistorialScreen(
+                                            ciudadanoId: viewModel.ciudadanoId!,
                                           ),
                                         ),
                                       );
@@ -98,7 +113,7 @@ class PhoneInputScreen extends StatelessWidget {
                             child: viewModel.isLoading
                                 ? const CircularProgressIndicator(color: Colors.white)
                                 : const Text(
-                                    'Continuar',
+                                    'Ver mis incidencias',
                                     style: TextStyle(fontSize: 18, color: Colors.white),
                                   ),
                           ),

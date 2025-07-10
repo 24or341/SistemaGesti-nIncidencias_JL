@@ -11,6 +11,7 @@ class HistorialViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
+  // Cargar incidencias filtradas por ciudadano
   Future<void> cargarHistorial(int ciudadanoId) async {
     _isLoading = true;
     _errorMessage = null;
@@ -21,6 +22,23 @@ class HistorialViewModel extends ChangeNotifier {
       _incidencias = data.map((json) => Incidencia.fromJson(json)).toList();
     } catch (e) {
       _errorMessage = 'Error al cargar incidencias.';
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  // Cargar todas las incidencias (sin filtro)
+  Future<void> cargarHistorialSinFiltro() async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      final data = await IncidenciaService.obtenerTodasLasIncidencias(); // sin parámetro
+      _incidencias = data.map((json) => Incidencia.fromJson(json)).toList();
+    } catch (e) {
+      _errorMessage = 'Error al cargar todas las incidencias.';
     } finally {
       _isLoading = false;
       notifyListeners();

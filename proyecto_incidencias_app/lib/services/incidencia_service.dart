@@ -30,7 +30,6 @@ class IncidenciaService {
       request.fields['tipo_id'] = tipoId.toString();
       request.fields['ciudadano_id'] = ciudadanoId.toString();
 
-      // Si hay foto, la añadimos como archivo
       if (foto != null) {
         request.files.add(
           await http.MultipartFile.fromPath(
@@ -75,9 +74,11 @@ class IncidenciaService {
     }
   }
 
-  // Obtener todas las incidencias (para el historial del ciudadano)
-  static Future<List<Map<String, dynamic>>> obtenerTodasLasIncidencias(int ciudadanoId) async {
-    final url = Uri.parse('${baseUrl}api_ciudadano/listar_incidencias.php?ciudadano_id=$ciudadanoId');
+  // Obtener todas las incidencias (filtradas o no por ciudadanoId)
+  static Future<List<Map<String, dynamic>>> obtenerTodasLasIncidencias([int? ciudadanoId]) async {
+    final url = ciudadanoId != null
+        ? Uri.parse('${baseUrl}api_ciudadano/listar_incidencias.php?ciudadano_id=$ciudadanoId')
+        : Uri.parse('${baseUrl}api_ciudadano/listar_todas.php'); // Nuevo endpoint
 
     try {
       final response = await http.get(url);
@@ -93,10 +94,11 @@ class IncidenciaService {
         return [];
       }
     } catch (e) {
-      debugPrint("Error al obtener todas las incidencias: $e");
+      debugPrint("Error al obtener incidencias: $e");
       return [];
     }
   }
+
 
   // Validar o registrar ciudadano por número de celular
   static Future<Map<String, dynamic>?> validarTelefono(String celular) async {

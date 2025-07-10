@@ -10,6 +10,11 @@
             return IncidenciaRepository::obtenerTodas();
         }
 
+        public static function obtenerTodasCiudadano(): array
+        {
+            return IncidenciaRepository::obtenerTodasCiudadano();
+        }
+
         public static function asignarEmpleado(int $incidenciaId, int $empleadoId, int $prioridadId, ?string $fechaProgramada = null): bool
         {
             return IncidenciaRepository::asignarEmpleado($incidenciaId, $empleadoId, $prioridadId, $fechaProgramada);

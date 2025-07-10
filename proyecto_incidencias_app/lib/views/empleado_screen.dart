@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'tareas_screen.dart';
+import 'perfil_screen.dart';
+import '../models/usuario_model.dart';
 
 class EmpleadoScreen extends StatefulWidget {
   final Map<String, dynamic> user;
@@ -12,18 +14,16 @@ class EmpleadoScreen extends StatefulWidget {
 
 class _EmpleadoScreenState extends State<EmpleadoScreen> {
   int _selectedIndex = 0;
-
+  late final Usuario usuario;
   late final List<Widget> _screens;
 
   @override
   void initState() {
     super.initState();
+    usuario = Usuario.fromJson(widget.user);
     _screens = [
       TareasScreen(user: widget.user),
-      const Center(child: Text('Próximamente', style: TextStyle(color: Colors.white))),
-      // const Center(child: Text('Completadas', style: TextStyle(color: Colors.white))),
-      // const Center(child: Text('Notificaciones', style: TextStyle(color: Colors.white))),
-      // const Center(child: Text('Perfil', style: TextStyle(color: Colors.white))),
+      PerfilScreen(usuario: usuario),
     ];
   }
 
@@ -65,21 +65,9 @@ class _EmpleadoScreenState extends State<EmpleadoScreen> {
                 label: 'Tareas',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.lock_outline),
-                label: 'Próximamente',
+                icon: Icon(Icons.person_outline),
+                label: 'Perfil',
               ),
-              // BottomNavigationBarItem(
-              //   icon: Icon(Icons.check_circle),
-              //   label: 'Completadas',
-              // ),
-              // BottomNavigationBarItem(
-              //   icon: Icon(Icons.notifications_none),
-              //   label: 'Notificaciones',
-              // ),
-              // BottomNavigationBarItem(
-              //   icon: Icon(Icons.person_outline),
-              //   label: 'Perfil',
-              // ),
             ],
           ),
         ),

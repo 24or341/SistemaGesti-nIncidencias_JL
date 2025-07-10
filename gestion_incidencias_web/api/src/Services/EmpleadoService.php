@@ -40,18 +40,22 @@
             if (!$emp || !password_verify($password, $emp['password'])) {
                 return null;
             }
+
             $token = Auth::generarToken([
                 'id'       => $emp['id'],
                 'nombre'   => $emp['nombre'],
                 'apellido' => $emp['apellido'],
                 'email'    => $emp['email'],
+                'dni'      => $emp['dni'],
                 'role'     => 'empleado'
             ]);
+
             return [
                 'id'       => $emp['id'],
                 'nombre'   => $emp['nombre'],
                 'apellido' => $emp['apellido'],
                 'email'    => $emp['email'],
+                'dni'      => $emp['dni'],
                 'role'     => 'empleado',
                 'token'    => $token
             ];
@@ -76,6 +80,9 @@
                 error_log('Error en yaAsignado: ' . $e->getMessage());
                 return false;
             }
+        }
+        public static function actualizarPerfil(int $id, string $nombre, string $apellido, string $correo, ?string $dni): void {
+            EmpleadoRepository::actualizar($id, $nombre, $apellido, $correo, $dni);
         }
     }
 ?>

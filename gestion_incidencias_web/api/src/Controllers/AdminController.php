@@ -23,12 +23,16 @@
             $_SESSION['usuario_nombre'] = $admin['nombre'];
 
             Response::success([
-                'id'     => $admin['id'],
-                'nombre' => $admin['nombre'],
-                'role'   => 'administrador',
-                'token'  => $admin['token']
+                'id'       => $admin['id'],
+                'nombre'   => $admin['nombre'],
+                'apellido' => $admin['apellido'] ?? '',
+                'email'    => $admin['email'],
+                'dni'      => $admin['dni'] ?? null,
+                'role'     => 'administrador',
+                'token'    => $admin['token']
             ], "Inicio de sesión exitoso");
         }
+
 
         public static function register(array $data): void
         {
@@ -69,10 +73,12 @@
                 'nombre'   => $admin['nombre'],
                 'apellido' => $admin['apellido'] ?? '',
                 'email'    => $admin['email'],
+                'dni'      => $admin['dni'] ?? null,
                 'token'    => $admin['token'],
                 'role'     => 'administrador'
             ];
         }
+
 
         public static function registerRaw(array $data): int
         {
@@ -91,6 +97,9 @@
                 $data['email'],
                 $data['password']
             );
+        }
+        public static function actualizarPerfil(int $id, string $nombre, string $apellido, string $correo, ?string $dni): void {
+            AdminService::actualizarPerfil($id, $nombre, $apellido, $correo, $dni);
         }
     }
 ?>

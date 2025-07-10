@@ -39,7 +39,13 @@ class LoginViewModel extends ChangeNotifier {
     if (response['success'] == true && response['data'] != null) {
       final userData = response['data'];
       if (userData is Map<String, dynamic>) {
-        _usuario = Usuario.fromJson(userData);
+        try {
+          _usuario = Usuario.fromJson(userData);
+        } catch (e) {
+          _errorMessage = 'Error al interpretar los datos del usuario.';
+          notifyListeners();
+          return false;
+        }
         notifyListeners();
         return true;
       } else {

@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
-import 'reportar_screen.dart';
-import 'historial_screen.dart';
+import 'reporte_paso1_screen.dart';
+import 'historial_todo_screen.dart';
+import 'phone_input_screen.dart'; // Se reutiliza para ingresar número y ver historial individual
 
 class CiudadanoHome extends StatefulWidget {
-  final Map<String, dynamic> user;
+  final int initialIndex; // <-- Agregado
 
-  const CiudadanoHome({super.key, required this.user});
+  const CiudadanoHome({super.key, this.initialIndex = 0}); // <-- Agregado
 
   @override
   State<CiudadanoHome> createState() => _CiudadanoHomeState();
 }
 
 class _CiudadanoHomeState extends State<CiudadanoHome> {
-  int _selectedIndex = 0;
+  late int _selectedIndex; // <-- Modificado: late
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialIndex; // <-- Inicializado desde el widget
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -23,20 +30,9 @@ class _CiudadanoHomeState extends State<CiudadanoHome> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> screens = <Widget>[
-      ReportarScreen(ciudadanoId: widget.user['id_celular']),
-      HistorialScreen(ciudadanoId: widget.user['id_celular']),
-      // const Center(
-      //   child: Text(
-      //     'Notificaciones',
-      //     style: TextStyle(color: Colors.white),
-      //   ),
-      // ),
-      // const Center(
-      //   child: Text(
-      //     'Perfil',
-      //     style: TextStyle(color: Colors.white),
-      //   ),
-      // ),
+      const ReportePaso1Screen(),
+      const HistorialTodoScreen(),
+      const PhoneInputScreen(), // Se usará para que el ciudadano ingrese su número y vea su historial
     ];
 
     return Container(
@@ -70,17 +66,13 @@ class _CiudadanoHomeState extends State<CiudadanoHome> {
                 label: 'Reportar',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.history),
-                label: 'Historial',
+                icon: Icon(Icons.public),
+                label: 'Todas',
               ),
-              // BottomNavigationBarItem(
-              //   icon: Icon(Icons.notifications_none),
-              //   label: 'Notificaciones',
-              // ),
-              // BottomNavigationBarItem(
-              //   icon: Icon(Icons.person_outline),
-              //   label: 'Perfil',
-              // ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.search),
+                label: 'Mis Incidencias',
+              ),
             ],
           ),
         ),

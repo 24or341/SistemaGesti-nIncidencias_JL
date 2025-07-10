@@ -4,6 +4,8 @@ class Usuario {
   final String apellido;
   final String correo;
   final String? token;
+  final String? dni;
+  final String? role;
 
   Usuario({
     required this.id,
@@ -11,6 +13,8 @@ class Usuario {
     required this.apellido,
     required this.correo,
     this.token,
+    this.dni,
+    this.role,
   });
 
   factory Usuario.fromJson(Map<String, dynamic> json) {
@@ -18,8 +22,10 @@ class Usuario {
       id: json['id'],
       nombre: json['nombre'] ?? '',
       apellido: json['apellido'] ?? '',
-      correo: json['correo'] ?? '',
+      correo: json['email'] ?? '',
       token: json['token'],
+      dni: json['dni'],
+      role: json['role'],
     );
   }
 
@@ -28,8 +34,10 @@ class Usuario {
       'id': id,
       'nombre': nombre,
       'apellido': apellido,
-      'correo': correo,
+      'email': correo,
       'token': token,
+      'dni': dni,
+      'role': role,
     };
   }
 }

@@ -23,12 +23,15 @@
             ]);
 
             return [
-                'id' => $admin['id'],
-                'nombre' => $admin['nombre'],
-                'email' => $admin['email'],
-                'token' => $token
+                'id'       => $admin['id'],
+                'nombre'   => $admin['nombre'],
+                'apellido' => $admin['apellido'] ?? '',
+                'email'    => $admin['email'],
+                'dni'      => $admin['dni'] ?? null,
+                'token'    => $token
             ];
         }
+
 
         public static function registerRaw(string $nombre,string $apellido,string $email,string $password): int {
             return AdminRepository::create([
@@ -36,6 +39,10 @@
             'email'=>$email,'password'=>password_hash($password,PASSWORD_BCRYPT),
             'rol'=>'administrador'
             ]);
+        }
+
+        public static function actualizarPerfil(int $id, string $nombre, string $apellido, string $correo, ?string $dni): void {
+            AdminRepository::actualizar($id, $nombre, $apellido, $correo, $dni);
         }
     }
 

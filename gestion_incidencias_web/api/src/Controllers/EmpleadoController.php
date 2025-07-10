@@ -57,12 +57,16 @@
             $_SESSION['usuario_nombre'] = $resp['nombre'];
 
             Response::success([
-                'id'     => $resp['id'],
-                'nombre' => $resp['nombre'],
-                'role'   => 'empleado',
-                'token'  => $resp['token']
+                'id'       => $resp['id'],
+                'nombre'   => $resp['nombre'],
+                'apellido' => $resp['apellido'],
+                'email'    => $resp['email'],
+                'dni'      => $resp['dni'],
+                'role'     => 'empleado',
+                'token'    => $resp['token']
             ], "Login exitoso");
         }
+
 
         public static function loginRaw(string $email, string $password): ?array
         {
@@ -70,15 +74,18 @@
             if (!$emp) {
                 return null;
             }
+
             return [
                 'id'       => $emp['id'],
                 'nombre'   => $emp['nombre'],
                 'apellido' => $emp['apellido'],
                 'email'    => $emp['email'],
+                'dni'      => $emp['dni'],
                 'role'     => 'empleado',
                 'token'    => $emp['token']
             ];
         }
+
 
         public static function registerRaw(array $data): int
         {
@@ -124,6 +131,9 @@
             if (\App\Services\EmpleadoService::yaAsignado($empleadoId, $incidenciaId)) {
                 \App\Core\Response::error("La incidencia ya está asignada a este empleado", 409);
             }
+        }
+        public static function actualizarPerfil(int $id, string $nombre, string $apellido, string $correo, ?string $dni): void {
+            EmpleadoService::actualizarPerfil($id, $nombre, $apellido, $correo, $dni);
         }
     }
 ?>

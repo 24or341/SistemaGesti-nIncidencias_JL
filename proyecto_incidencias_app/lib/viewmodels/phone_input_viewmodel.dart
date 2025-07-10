@@ -6,6 +6,7 @@ class PhoneInputViewModel extends ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
   int? _ciudadanoId;
+  bool _disposed = false;
 
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
@@ -16,13 +17,13 @@ class PhoneInputViewModel extends ChangeNotifier {
 
     if (celular.isEmpty || celular.length < 9) {
       _errorMessage = 'Por favor ingrese un número de teléfono válido.';
-      notifyListeners();
+      _notify();
       return false;
     }
 
     _isLoading = true;
     _errorMessage = null;
-    notifyListeners();
+    _notify();
 
     try {
       final response = await IncidenciaService.validarTelefono(celular);
@@ -39,12 +40,19 @@ class PhoneInputViewModel extends ChangeNotifier {
       return false;
     } finally {
       _isLoading = false;
+      _notify();
+    }
+  }
+
+  void _notify() {
+    if (!_disposed) {
       notifyListeners();
     }
   }
 
   @override
   void dispose() {
+    _disposed = true;
     phoneController.dispose();
     super.dispose();
   }

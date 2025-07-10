@@ -18,7 +18,11 @@ class _TareasScreenState extends State<TareasScreen> {
   @override
   void initState() {
     super.initState();
-    _viewModel = TareasViewModel(widget.user['id'], widget.user['token']);
+    _viewModel = TareasViewModel(
+      widget.user['id'],
+      widget.user['token'],
+      widget.user['role'], // <- cambiado aquí
+    );
     _viewModel.cargarIncidencias();
   }
 
@@ -35,7 +39,11 @@ class _TareasScreenState extends State<TareasScreen> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          title: const Text('Tareas Asignadas'),
+          title: Text(
+            widget.user['role'] == 'administrador' // <- cambiado aquí
+                ? 'Todas las Incidencias'
+                : 'Tareas Asignadas',
+          ),
           backgroundColor: Colors.teal.shade700,
           foregroundColor: Colors.white,
           elevation: 0,
@@ -58,10 +66,12 @@ class _TareasScreenState extends State<TareasScreen> {
               }
 
               if (_viewModel.incidencias.isEmpty) {
-                return const Center(
+                return Center(
                   child: Text(
-                    'No tienes incidencias asignadas.',
-                    style: TextStyle(color: Colors.white70),
+                    widget.user['role'] == 'administrador' // <- cambiado aquí
+                        ? 'No hay incidencias registradas.'
+                        : 'No tienes incidencias asignadas.',
+                    style: const TextStyle(color: Colors.white70),
                   ),
                 );
               }
@@ -146,8 +156,9 @@ class _TareasScreenState extends State<TareasScreen> {
             MaterialPageRoute(
               builder: (context) => DetalleIncidenciaScreen(
                 incidenciaId: incidencia.id,
-                empleadoId: widget.user['id'],
+                usuarioId: widget.user['id'],
                 token: widget.user['token'],
+                role: widget.user['role'],
               ),
             ),
           );

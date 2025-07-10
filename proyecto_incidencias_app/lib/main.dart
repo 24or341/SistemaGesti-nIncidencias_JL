@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'views/login_screen.dart';
 import 'views/register_screen.dart';
-import 'views/phone_input_screen.dart';
+import 'views/ciudadano_home.dart';
 
 void main() {
   runApp(const MainApp());
@@ -89,7 +89,7 @@ class WelcomeScreen extends StatelessWidget {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                     ),
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const PhoneInputScreen()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const CiudadanoHome()));
                     },
                     child: const Text('Reportar Incidencia', style: TextStyle(fontSize: 18)),
                   ),

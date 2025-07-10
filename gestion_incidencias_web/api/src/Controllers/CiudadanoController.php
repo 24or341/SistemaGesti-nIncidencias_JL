@@ -23,6 +23,7 @@
             $lat = $data['latitud'];
             $lng = $data['longitud'];
             $descripcion = $data['descripcion'];
+            $direccion = $data['direccion'] ?? 'Dirección no disponible';
             $fecha = date("Y-m-d H:i:s");
             $zona = $data['zona'] ?? 'Zona no disponible';
             $id_celular = $data['id_celular'] ?? null;
@@ -37,9 +38,11 @@
 
                 $stmt = $pdo->prepare("
                     INSERT INTO incidencia (
-                        tipo_id, descripcion, foto, latitud, longitud, fecha_reporte, estado_id, zona, id_celular
+                        tipo_id, descripcion, foto, latitud, longitud, fecha_reporte,
+                        estado_id, zona, direccion, id_celular
                     ) VALUES (
-                        :tipo_id, :descripcion, :foto, :lat, :lng, :fecha, 1, :zona, :id_celular
+                        :tipo_id, :descripcion, :foto, :lat, :lng, :fecha,
+                        1, :zona, :direccion, :id_celular
                     )
                 ");
 
@@ -50,6 +53,7 @@
                 $stmt->bindParam(':lng', $lng);
                 $stmt->bindParam(':fecha', $fecha);
                 $stmt->bindParam(':zona', $zona);
+                $stmt->bindParam(':direccion', $direccion);
                 $stmt->bindParam(':id_celular', $id_celular, \PDO::PARAM_INT);
 
                 $stmt->execute();

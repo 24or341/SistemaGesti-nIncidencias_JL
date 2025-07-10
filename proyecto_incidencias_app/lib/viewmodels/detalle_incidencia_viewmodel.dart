@@ -8,16 +8,26 @@ class DetalleIncidenciaViewModel extends ChangeNotifier {
   Map<String, dynamic>? get incidencia => _incidencia;
   bool get isLoading => _isLoading;
 
-  Future<void> cargarDetalle(int empleadoId, int incidenciaId, String token) async {
+  Future<void> cargarDetalle(int usuarioId, int incidenciaId, String token, String rol) async {
     _isLoading = true;
     notifyListeners();
 
     try {
-      final resultado = await IncidenciasEmpleadoService.obtenerIncidenciaPorId(
-        empleadoId,
-        incidenciaId,
-        token: token,
-      );
+      Map<String, dynamic>? resultado;
+
+      if (rol == 'administrador') {
+        resultado = await IncidenciasEmpleadoService.obtenerIncidenciaPorIdAdmin(
+          incidenciaId,
+          token: token,
+        );
+      } else {
+        resultado = await IncidenciasEmpleadoService.obtenerIncidenciaPorId(
+          usuarioId,
+          incidenciaId,
+          token: token,
+        );
+      }
+
       _incidencia = resultado;
     } catch (e) {
       _incidencia = null;

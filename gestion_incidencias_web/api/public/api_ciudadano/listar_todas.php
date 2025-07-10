@@ -8,6 +8,6 @@
         Response::error("Método no permitido", 405);
     }
 
-    $data = IncidenciaService::obtenerTodas();
+    $data = IncidenciaService::obtenerTodasCiudadano();
     Response::success($data, "Listado completo de incidencias");
 ?>
