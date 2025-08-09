@@ -4,6 +4,9 @@ import '../viewmodels/reportar_viewmodel.dart';
 import 'reporte_paso2_screen.dart';
 import '../main.dart';
 
+/// Pantalla inicial para reportar incidencias.
+/// Permite ingresar descripción, tipo, fecha, teléfono, dirección y zona.
+/// Incluye validación y navegación al segundo paso del reporte.
 class ReportePaso1Screen extends StatelessWidget {
   const ReportePaso1Screen({super.key});
 
@@ -12,7 +15,7 @@ class ReportePaso1Screen extends StatelessWidget {
     return ChangeNotifierProvider<ReportarViewModel>(
       create: (_) => ReportarViewModel()..cargarTipos(),
       child: Consumer<ReportarViewModel>(
-        builder: (context, viewModel, _) {
+        builder: (context, reporteVM, _) {
           return Scaffold(
             appBar: AppBar(
               title: const Text('Reportar Incidencia'),
@@ -23,6 +26,7 @@ class ReportePaso1Screen extends StatelessWidget {
                   icon: const Icon(Icons.logout),
                   tooltip: 'Salir al inicio',
                   onPressed: () {
+                    // Regresa a la pantalla de bienvenida eliminando historial
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(builder: (_) => const WelcomeScreen()),
@@ -32,16 +36,19 @@ class ReportePaso1Screen extends StatelessWidget {
                 ),
               ],
             ),
-
             body: SingleChildScrollView(
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  _buildTextField(viewModel.descripcionController, 'Descripción', maxLines: 3),
+                  _buildTextField(
+                    controller: reporteVM.descripcionController,
+                    label: 'Descripción',
+                    maxLines: 3,
+                  ),
                   const SizedBox(height: 16),
 
-                  // Tipo de Incidencia
-                  if (viewModel.tipos.isNotEmpty)
+                  // Selector de tipo de incidencia
+                  if (reporteVM.tipos.isNotEmpty)
                     Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -50,23 +57,26 @@ class ReportePaso1Screen extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: DropdownButton<int>(
                         isExpanded: true,
-                        value: viewModel.tipoSeleccionado?.id,
+                        value: reporteVM.tipoSeleccionado?.id,
                         dropdownColor: Colors.white,
                         iconEnabledColor: Colors.teal,
-                        underline: Container(),
-                        style: const TextStyle(color: Colors.black, fontSize: 16),
-                        items: viewModel.tipos
-                            .map((tipo) => DropdownMenuItem<int>(
-                                  value: tipo.id,
-                                  child: Text(tipo.nombre),
-                                ))
+                        underline: const SizedBox(),
+                        style:
+                            const TextStyle(color: Colors.black, fontSize: 16),
+                        items: reporteVM.tipos
+                            .map(
+                              (tipo) => DropdownMenuItem<int>(
+                                value: tipo.id,
+                                child: Text(tipo.nombre),
+                              ),
+                            )
                             .toList(),
-                        onChanged: (id) => viewModel.seleccionarTipoPorId(id),
+                        onChanged: reporteVM.seleccionarTipoPorId,
                       ),
                     ),
                   const SizedBox(height: 16),
 
-                  // Fecha de Reporte (solo visual)
+                  // Muestra fecha actual (solo visual)
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -76,13 +86,24 @@ class ReportePaso1Screen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
 
-                  _buildTextField(viewModel.celularController, 'Número de Teléfono', keyboardType: TextInputType.phone),
+                  _buildTextField(
+                    controller: reporteVM.celularController,
+                    label: 'Número de Teléfono',
+                    keyboardType: TextInputType.phone,
+                  ),
                   const SizedBox(height: 16),
 
-                  _buildTextField(viewModel.direccionController, 'Dirección'),
+                  _buildTextField(
+                    controller: reporteVM.direccionController,
+                    label: 'Dirección',
+                  ),
                   const SizedBox(height: 16),
 
-                  _buildTextField(viewModel.zonaController, 'Zona', initialValue: 'Tacna'),
+                  _buildTextField(
+                    controller: reporteVM.zonaController,
+                    label: 'Zona',
+                    initialValue: 'Tacna',
+                  ),
                   const SizedBox(height: 24),
 
                   SizedBox(
@@ -90,35 +111,6 @@ class ReportePaso1Screen extends StatelessWidget {
                     child: ElevatedButton.icon(
                       icon: const Icon(Icons.arrow_forward),
                       label: const Text('Siguiente'),
-                      onPressed: () async {
-                        if (viewModel.descripcionController.text.isEmpty ||
-                            viewModel.celularController.text.length < 9) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Complete los campos correctamente.')),
-                          );
-                          return;
-                        }
-
-                        final exito = await viewModel.validarOCrearCiudadano();
-                        if (!exito) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Error al validar número de teléfono.')),
-                          );
-                          return;
-                        }
-
-                        if (context.mounted) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => ChangeNotifierProvider.value(
-                                value: viewModel,
-                                child: const ReportePaso2Screen(),
-                              ),
-                            ),
-                          );
-                        }
-                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.teal,
                         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -126,6 +118,35 @@ class ReportePaso1Screen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
+                      onPressed: () async {
+                        // Validar campos obligatorios
+                        if (!_camposValidos(reporteVM, context)) return;
+
+                        // Validar o crear ciudadano
+                        final exito = await reporteVM.validarOCrearCiudadano();
+                        if (!exito) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content:
+                                  Text('Error al validar número de teléfono.'),
+                            ),
+                          );
+                          return;
+                        }
+
+                        // Navegar al segundo paso
+                        if (context.mounted) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => ChangeNotifierProvider.value(
+                                value: reporteVM,
+                                child: const ReportePaso2Screen(),
+                              ),
+                            ),
+                          );
+                        }
+                      },
                     ),
                   ),
                 ],
@@ -137,8 +158,15 @@ class ReportePaso1Screen extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String label,
-      {int maxLines = 1, TextInputType keyboardType = TextInputType.text, String? initialValue}) {
+  /// Construye un TextField estilizado con opciones personalizables.
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    int maxLines = 1,
+    TextInputType keyboardType = TextInputType.text,
+    String? initialValue,
+  }) {
+    // Asigna valor inicial solo si el campo está vacío
     if (initialValue != null && controller.text.isEmpty) {
       controller.text = initialValue;
     }
@@ -162,5 +190,17 @@ class ReportePaso1Screen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// Valida que los campos obligatorios estén completos correctamente.
+  bool _camposValidos(ReportarViewModel vm, BuildContext context) {
+    if (vm.descripcionController.text.isEmpty ||
+        vm.celularController.text.length < 9) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Complete los campos correctamente.')),
+      );
+      return false;
+    }
+    return true;
   }
 }

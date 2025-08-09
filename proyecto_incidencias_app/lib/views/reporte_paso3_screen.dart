@@ -4,13 +4,15 @@ import 'package:provider/provider.dart';
 import '../viewmodels/reportar_viewmodel.dart';
 import 'ciudadano_home.dart';
 
+/// Pantalla final para subir la foto de evidencia y enviar el reporte de incidencia.
+/// Muestra estados según el progreso: subida, éxito o error.
 class ReportePaso3Screen extends StatelessWidget {
   const ReportePaso3Screen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ReportarViewModel>(
-      builder: (context, viewModel, _) {
+      builder: (context, reporteViewModel, _) {
         return Scaffold(
           appBar: AppBar(
             title: const Text('Subir Foto'),
@@ -19,7 +21,7 @@ class ReportePaso3Screen extends StatelessWidget {
           ),
           body: Padding(
             padding: const EdgeInsets.all(20),
-            child: viewModel.reporteExitoso
+            child: reporteViewModel.reporteExitoso
                 ? Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -38,6 +40,7 @@ class ReportePaso3Screen extends StatelessWidget {
                         const SizedBox(height: 30),
                         ElevatedButton.icon(
                           onPressed: () {
+                            // Regresa al home con la pestaña de "Mis Incidencias"
                             Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
@@ -61,6 +64,7 @@ class ReportePaso3Screen extends StatelessWidget {
                   )
                 : Column(
                     children: [
+                      // Instrucciones para subir imagen
                       Container(
                         width: double.infinity,
                         padding: const EdgeInsets.all(24),
@@ -84,13 +88,14 @@ class ReportePaso3Screen extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
 
+                      // Botones para seleccionar imagen desde galería o tomar foto
                       Wrap(
                         spacing: 16,
                         runSpacing: 10,
                         alignment: WrapAlignment.center,
                         children: [
                           ElevatedButton.icon(
-                            onPressed: viewModel.seleccionarImagenDesdeGaleria,
+                            onPressed: reporteViewModel.seleccionarImagenDesdeGaleria,
                             icon: const Icon(Icons.photo_library),
                             label: const Text('Galería'),
                             style: ElevatedButton.styleFrom(
@@ -101,7 +106,7 @@ class ReportePaso3Screen extends StatelessWidget {
                             ),
                           ),
                           ElevatedButton.icon(
-                            onPressed: viewModel.tomarFotoDesdeCamara,
+                            onPressed: reporteViewModel.tomarFotoDesdeCamara,
                             icon: const Icon(Icons.camera_alt),
                             label: const Text('Cámara'),
                             style: ElevatedButton.styleFrom(
@@ -116,20 +121,21 @@ class ReportePaso3Screen extends StatelessWidget {
 
                       const SizedBox(height: 20),
 
-                      if (viewModel.imagenSeleccionada != null)
+                      // Vista previa de imagen seleccionada con opción a remover
+                      if (reporteViewModel.imagenSeleccionada != null)
                         Column(
                           children: [
                             ClipRRect(
                               borderRadius: BorderRadius.circular(12),
                               child: Image.file(
-                                File(viewModel.imagenSeleccionada!.path),
+                                File(reporteViewModel.imagenSeleccionada!.path),
                                 height: 200,
                                 fit: BoxFit.contain,
                               ),
                             ),
                             const SizedBox(height: 10),
                             TextButton.icon(
-                              onPressed: viewModel.removerImagen,
+                              onPressed: reporteViewModel.removerImagen,
                               icon: const Icon(Icons.delete, color: Colors.redAccent),
                               label: const Text(
                                 'Remover Archivo',
@@ -140,19 +146,20 @@ class ReportePaso3Screen extends StatelessWidget {
                         ),
                       const Spacer(),
 
+                      // Botón para enviar el reporte con validación de carga
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton.icon(
                           icon: const Icon(Icons.send),
-                          label: viewModel.isLoading
+                          label: reporteViewModel.isLoading
                               ? const CircularProgressIndicator(color: Colors.white)
                               : const Text('Reportar Incidencia', style: TextStyle(fontSize: 18)),
-                          onPressed: viewModel.isLoading
+                          onPressed: reporteViewModel.isLoading
                               ? null
                               : () async {
-                                  final result = await viewModel.enviarReporteFinal(context);
+                                  final result = await reporteViewModel.enviarReporteFinal(context);
                                   if (result['success'] == true) {
-                                    viewModel.reporteExitoso = true;
+                                    reporteViewModel.reporteExitoso = true;
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(content: Text(result['message'] ?? 'Error al reportar')),

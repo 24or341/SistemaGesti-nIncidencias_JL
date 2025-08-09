@@ -4,13 +4,15 @@ import 'package:provider/provider.dart';
 import '../viewmodels/reportar_viewmodel.dart';
 import 'reporte_paso3_screen.dart';
 
+/// Pantalla donde el usuario selecciona la ubicación de la incidencia en un mapa.
+/// Usa Google Maps para mostrar y actualizar la ubicación seleccionada.
 class ReportePaso2Screen extends StatelessWidget {
   const ReportePaso2Screen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ReportarViewModel>(
-      builder: (context, viewModel, _) {
+      builder: (context, reporteViewModel, _) {
         return Scaffold(
           appBar: AppBar(
             title: const Text('Seleccione la Ubicación'),
@@ -19,30 +21,36 @@ class ReportePaso2Screen extends StatelessWidget {
           ),
           body: Column(
             children: [
+              // Mapa Google con marcador en la ubicación seleccionada
               Expanded(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: GoogleMap(
                     initialCameraPosition: CameraPosition(
-                      target: viewModel.selectedLocation,
+                      target: reporteViewModel.selectedLocation,
                       zoom: 15,
                     ),
                     onTap: (LatLng location) {
-                      viewModel.selectedLocation = location;
-                      viewModel.notifyListeners();
+                      // Actualiza la ubicación seleccionada y notifica cambios
+                      reporteViewModel.selectedLocation = location;
+                      reporteViewModel.notifyListeners();
                     },
                     markers: {
                       Marker(
                         markerId: const MarkerId('selectedLocation'),
-                        position: viewModel.selectedLocation,
+                        position: reporteViewModel.selectedLocation,
                         infoWindow: const InfoWindow(title: 'Ubicación seleccionada'),
                       ),
                     },
                     zoomControlsEnabled: true,
+                    mapToolbarEnabled: true,
+                    myLocationButtonEnabled: true,
                   ),
                 ),
               ),
               const SizedBox(height: 16),
+
+              // Botón para avanzar al siguiente paso del reporte
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: SizedBox(
@@ -51,11 +59,12 @@ class ReportePaso2Screen extends StatelessWidget {
                     icon: const Icon(Icons.arrow_forward),
                     label: const Text('Siguiente'),
                     onPressed: () {
+                      // Navega a la siguiente pantalla manteniendo el mismo ViewModel
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (_) => ChangeNotifierProvider.value(
-                            value: viewModel,
+                            value: reporteViewModel,
                             child: const ReportePaso3Screen(),
                           ),
                         ),

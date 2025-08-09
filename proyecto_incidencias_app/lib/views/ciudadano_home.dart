@@ -1,41 +1,51 @@
 import 'package:flutter/material.dart';
 import 'reporte_paso1_screen.dart';
 import 'historial_todo_screen.dart';
-import 'phone_input_screen.dart'; // Se reutiliza para ingresar número y ver historial individual
+import 'phone_input_screen.dart';
 
+/// Pantalla principal para ciudadanos.
+/// Contiene navegación inferior para acceder a:
+/// - Reportar incidencia
+/// - Ver todas las incidencias
+/// - Ver incidencias propias
 class CiudadanoHome extends StatefulWidget {
-  final int initialIndex; // <-- Agregado
+  /// Índice inicial de la pestaña que se mostrará.
+  final int initialIndex;
 
-  const CiudadanoHome({super.key, this.initialIndex = 0}); // <-- Agregado
+  const CiudadanoHome({super.key, this.initialIndex = 0});
 
   @override
   State<CiudadanoHome> createState() => _CiudadanoHomeState();
 }
 
 class _CiudadanoHomeState extends State<CiudadanoHome> {
-  late int _selectedIndex; // <-- Modificado: late
+  /// Índice actual de la pestaña seleccionada.
+  late int _currentTabIndex;
+
+  /// Lista de pantallas disponibles en la navegación inferior.
+  static const List<Widget> _screens = [
+    ReportePaso1Screen(),
+    HistorialTodoScreen(),
+    PhoneInputScreen(),
+  ];
 
   @override
   void initState() {
     super.initState();
-    _selectedIndex = widget.initialIndex; // <-- Inicializado desde el widget
+    _currentTabIndex = widget.initialIndex;
   }
 
-  void _onItemTapped(int index) {
+  /// Cambia la pestaña activa del BottomNavigationBar.
+  void _onTabSelected(int index) {
     setState(() {
-      _selectedIndex = index;
+      _currentTabIndex = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> screens = <Widget>[
-      const ReportePaso1Screen(),
-      const HistorialTodoScreen(),
-      const PhoneInputScreen(), // Se usará para que el ciudadano ingrese su número y vea su historial
-    ];
-
     return Container(
+      // Fondo con gradiente
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: [Color(0xFF0f2027), Color(0xFF203a43), Color(0xFF2c5364)],
@@ -45,19 +55,21 @@ class _CiudadanoHomeState extends State<CiudadanoHome> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: SafeArea(child: screens[_selectedIndex]),
+        body: SafeArea(child: _screens[_currentTabIndex]),
         bottomNavigationBar: Container(
           decoration: const BoxDecoration(
             color: Color(0xFF1F1F3C),
-            border: Border(top: BorderSide(color: Colors.white12, width: 0.5)),
+            border: Border(
+              top: BorderSide(color: Colors.white12, width: 0.5),
+            ),
           ),
           child: BottomNavigationBar(
             backgroundColor: Colors.transparent,
             selectedItemColor: Colors.tealAccent.shade400,
             unselectedItemColor: Colors.white60,
             showUnselectedLabels: true,
-            currentIndex: _selectedIndex,
-            onTap: _onItemTapped,
+            currentIndex: _currentTabIndex,
+            onTap: _onTabSelected,
             type: BottomNavigationBarType.fixed,
             selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
             items: const [
