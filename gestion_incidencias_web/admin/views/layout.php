@@ -1,23 +1,31 @@
-<!DOCTYPE html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8">
-    <title><?= htmlspecialchars($title ?? 'Panel') ?></title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<?php
+// Configuración del archivo layout.php
+// Realizado por: Jorge Enrique Castañeda Centurión
+// Fecha: 2025-09-08
+/** @var string $content */
+/** @var string|null $title */
+?>
+
+<!DOCTYPE html> // Layout principal del panel de administración
+<html lang="es"> // Idioma del documento
+  <head> // Encabezado del documento HTML
+    <meta charset="UTF-8"> // Codificación de caracteres
+    <title><?= htmlspecialchars($title ?? 'Panel') ?></title> // Título de la página, con protección contra XSS
+    <meta name="viewport" content="width=device-width, initial-scale=1"> // Configuración de la vista para dispositivos móviles
 
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
-    >
+    > // Enlace a Bootstrap CSS
 
     <link
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
       rel="stylesheet"
-    >
+    > // Enlace a Font Awesome
 
-    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed&display=swap" rel="stylesheet"> // Enlace a Google Fonts
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script> // Enlace a Chart.js
 
   <style>
     body {
@@ -67,20 +75,20 @@
       padding: 12px;
       color: #0d47a1;
     }
-  </style>
+  </style> // Estilos personalizados para el layout
 
-  </head>
-  <body>
-    <?php include __DIR__ . '/partials/sidebar.php'; ?>
+  </head> // Cierre del encabezado
+  <body> // Cuerpo del documento HTML
+    <?php include __DIR__ . '/partials/sidebar.php'; ?> // Inclusión de la barra lateral
 
-    <div class="main-content">
-      <?php include __DIR__ . '/partials/header.php'; ?>
+    <div class="main-content"> // Contenido principal del documento
+      <?php include __DIR__ . '/partials/header.php'; ?> // Inclusión del encabezado
 
-      <main class="container py-4">
-        <?= $content ?>
-      </main>
+      <main class="container py-4"> // Contenedor principal para el contenido
+        <?= $content ?> // Contenido dinámico de la página
+      </main> // Cierre del contenedor principal
 
-      <?php include __DIR__ . '/partials/footer.php'; ?>
-    </div>
-  </body>
-</html>
+      <?php include __DIR__ . '/partials/footer.php'; ?> // Inclusión del pie de página
+    </div> // Cierre del contenido principal
+  </body> // Cierre del cuerpo del documento
+</html> // Cierre del documento HTML

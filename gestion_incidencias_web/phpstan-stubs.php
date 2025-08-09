@@ -1,8 +1,6 @@
 <?php
     declare(strict_types=1);
-
     /**
-     *
      * @param string               $view
      * @param array<string,mixed> $data
      */
@@ -21,11 +19,12 @@
     function view(string $view, array $data = []): void {}
 
     /**
-     * @param string $endpoint
-     * @param string $method
-     * @return array<string,mixed>
+     * @param string                 $endpoint
+     * @param string                 $method
+     * @param array<string,mixed>    $payload
+     * @return array<int|string,mixed>
      */
-    function apiRequest(string $endpoint, string $method): array {
+    function apiRequest(string $endpoint, string $method = 'GET', array $payload = []): array {
         return [];
     }
 

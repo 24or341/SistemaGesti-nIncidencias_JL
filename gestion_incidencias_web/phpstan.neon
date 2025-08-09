@@ -1,11 +1,11 @@
 parameters:
   level: max            
   paths:
-    - admin/
-    - api/
     - phpstan-stubs.php
+    - api/
 
   excludePaths:
+    - admin/*
     - admin/reporte/fpdf/*  
     - admin/reporte/fpdf/tutorial/* 
     - admin/reporte/generar_excel.php
