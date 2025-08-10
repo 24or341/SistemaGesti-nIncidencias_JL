@@ -1,59 +1,62 @@
 <?php
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
+// Configuración del archivo asignar_incidencia.php
+// Realizado por: Jorge Enrique Castañeda Centurión
+// Fecha: 2025-09-08
+declare(strict_types=1); // Habilita el modo estricto
+require_once __DIR__ . '/../../bootstrap.php'; // Carga las dependencias
 
-    require_once __DIR__ . '/../../bootstrap.php';
+use App\Core\Auth;
+use App\Core\Response;
+use App\Controllers\IncidenciaController;
 
-    use App\Core\Auth;
-    use App\Core\Response;
-    use App\Controllers\IncidenciaController;
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') { // Verifica el método de la solicitud
+    Response::error("Método no permitido", 405); // Envía una respuesta de error
+}
 
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        Response::error("Método no permitido", 405);
+$token = Auth::extractBearerFromServer(); // Extrae el token de la cabecera
+if ($token === null) { // Verifica si el token es nulo
+    Response::error("Token requerido", 401); // Envía una respuesta de error
+}
+try { // Intenta verificar el token
+    $user = Auth::verificarToken($token); // Verifica el token
+} catch (\Exception $e) { // Captura cualquier excepción
+    Response::error("Token inválido", 401); // Envía una respuesta de error
+}
+
+if (($user['role'] ?? '') !== 'administrador') { // Verifica si el usuario tiene el rol de administrador
+    Response::error("Permiso denegado", 403); // Envía una respuesta de error
+}
+
+$inputRaw = file_get_contents('php://input'); // Obtiene el contenido bruto de la solicitud
+$data = json_decode($inputRaw, true); // Decodifica el JSON
+if (!is_array($data)) { // Verifica si los datos son un array
+    Response::error("JSON inválido", 400); // Envía una respuesta de error
+}
+
+if (
+    !isset($data['incidencia_id']) || // Verifica si falta el ID de la incidencia
+    !isset($data['empleado_id'])   || // Verifica si falta el ID del empleado
+    !isset($data['prioridad_id'])   // Verifica si falta el ID de la prioridad
+) {
+    Response::error("Faltan datos", 422); // Envía una respuesta de error
+}
+
+if (!empty($data['fecha_programada'])) { // Verifica si se proporcionó una fecha programada
+    $fecha = (string)$data['fecha_programada']; // Convierte la fecha a string
+    if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha)) { // Verifica el formato de la fecha
+        Response::error("Formato de fecha inválido. Use YYYY-MM-DD", 422); // Envía una respuesta de error
     }
 
-    $hdr = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
-    if (!preg_match('/^Bearer\s+(.+)$/', $hdr, $m)) {
-        Response::error("Token requerido", 401);
+    $hoy = date('Y-m-d'); // Obtiene la fecha actual
+    if ($fecha < $hoy) { // Verifica si la fecha programada es anterior a hoy
+        Response::error("La fecha programada no puede ser anterior a hoy", 422); // Envía una respuesta de error
     }
-    try {
-        $user = Auth::verificarToken($m[1]);
-    } catch (\Exception $e) {
-        Response::error("Token inválido", 401);
-    }
+}
 
-    if (!in_array($user['role'] ?? '', ['administrador'])) {
-        Response::error("Permiso denegado", 403);
-    }
+\App\Controllers\EmpleadoController::validarAsignacionUnica($data); // Verifica la asignación única
 
-    $data = json_decode(file_get_contents("php://input"), true);
-    if (
-        !isset($data['incidencia_id']) ||
-        !isset($data['empleado_id'])   ||
-        !isset($data['prioridad_id'])
-    ) {
-        Response::error("Faltan datos", 422);
-    }
-
-    if (!empty($data['fecha_programada'])) {
-        $fecha = $data['fecha_programada'];
-
-        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha)) {
-            Response::error("Formato de fecha inválido. Use YYYY-MM-DD", 422);
-        }
-
-        $hoy = date('Y-m-d');
-        if ($fecha < $hoy) {
-            Response::error("La fecha programada no puede ser anterior a hoy", 422);
-        }
-    }
-
-    \App\Controllers\EmpleadoController::validarAsignacionUnica($data);
-
-    try {
-        IncidenciaController::asignarEmpleado($data);
-    } catch (\Throwable $e) {
-        Response::error("Error interno: " . $e->getMessage(), 500);
-    }
-?>
+try { // Intenta asignar el empleado
+    IncidenciaController::asignarEmpleado($data); // Asigna el empleado a la incidencia
+} catch (\Throwable $e) { // Captura cualquier excepción
+    Response::error("Error interno: " . $e->getMessage(), 500); // Envía una respuesta de error
+}

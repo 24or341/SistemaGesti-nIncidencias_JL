@@ -7,6 +7,10 @@
 
     class AdminRepository
     {
+        /**
+         * @param string $email
+         * @return array<string,mixed>|null
+         */
         public static function obtenerPorEmail(string $email): ?array
         {
             $pdo = Database::getInstance();
@@ -24,6 +28,10 @@
             return $admin ?: null;
         }
 
+        /**
+         * @param array<string,mixed> $data
+         * @return int
+         */
         public static function create(array $data): int {
             $pdo = Database::getInstance();
             $stmt = $pdo->prepare("

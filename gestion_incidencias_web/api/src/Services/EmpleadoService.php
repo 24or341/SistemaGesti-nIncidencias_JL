@@ -1,5 +1,5 @@
 <?php
-
+    declare(strict_types=1);
     namespace App\Services;
 
     use App\Repositories\EmpleadoRepository;
@@ -37,17 +37,15 @@
         public static function loginRaw(string $email, string $password): ?array
         {
             $emp = EmpleadoRepository::obtenerPorEmail($email);
-            if (!$emp || !password_verify($password, $emp['password'])) {
+            if (!$emp || !isset($emp['password']) || !password_verify($password, (string)$emp['password'])) {
                 return null;
             }
 
             $token = Auth::generarToken([
-                'id'       => $emp['id'],
-                'nombre'   => $emp['nombre'],
-                'apellido' => $emp['apellido'],
-                'email'    => $emp['email'],
-                'dni'      => $emp['dni'],
-                'role'     => 'empleado'
+                'user_id' => $emp['id'],
+                'nombre'  => $emp['nombre'],
+                'email'   => $emp['email'],
+                'role'    => 'empleado'
             ]);
 
             return [

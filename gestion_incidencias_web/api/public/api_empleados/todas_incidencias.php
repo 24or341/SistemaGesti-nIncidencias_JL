@@ -1,28 +1,32 @@
 <?php
-    require_once __DIR__ . '/../../bootstrap.php';
+declare(strict_types=1);
+require_once __DIR__ . '/../../bootstrap.php';
 
-    use App\Core\Auth;
-    use App\Core\Response;
-    use App\Controllers\IncidenciaController;
+use App\Core\Auth;
+use App\Core\Response;
+use App\Controllers\IncidenciaController;
 
-    $hdr = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
-    if (!preg_match('/^Bearer\s+(.+)$/', $hdr, $m)) {
-        Response::error("Token requerido", 401);
-    }
+if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+    Response::error("Método no permitido", 405);
+}
 
-    try {
-        $user = Auth::verificarToken($m[1]);
-    } catch (\Exception $e) {
-        Response::error("Token inválido", 401);
-    }
+$token = Auth::extractBearerFromServer();
+if ($token === null) {
+    Response::error("Token requerido", 401);
+}
 
-    if (($user['role'] ?? '') !== 'administrador') {
-        Response::error("Permiso denegado", 403);
-    }
+try {
+    $user = Auth::verificarToken($token);
+} catch (\Exception $e) {
+    Response::error("Token inválido", 401);
+}
 
-    if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-        Response::error("Método no permitido", 405);
-    }
+if (($user['role'] ?? '') !== 'administrador') {
+    Response::error("Permiso denegado", 403);
+}
 
+try {
     IncidenciaController::listar();
-?>
+} catch (\Throwable $e) {
+    Response::error("Error interno: " . $e->getMessage(), 500);
+}

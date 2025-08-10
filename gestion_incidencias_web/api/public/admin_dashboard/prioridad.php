@@ -1,36 +1,32 @@
 <?php
-    require_once __DIR__ . '/../../bootstrap.php';
-    use App\Core\Auth;
-    use App\Core\Response;
-    use App\Core\Database;
+declare(strict_types=1);
+require_once __DIR__ . '/../../bootstrap.php';
 
-    $hdr = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
-    if (!preg_match('/^Bearer\s+(.+)$/', $hdr, $m)) {
-        Response::error("Token requerido", 401);
-    }
-    try {
-        $user = Auth::verificarToken($m[1]);
-    } catch (\Exception $e) {
-        Response::error("Token inválido", 401);
-    }
-    if (($user['role'] ?? '') !== 'administrador') {
-        Response::error("Permiso denegado", 403);
-    }
+use App\Core\Auth;
+use App\Core\Response;
+use App\Controllers\PrioridadController;
 
-    if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-        Response::error("Método no permitido", 405);
-    }
+if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+    Response::error("Método no permitido", 405);
+}
 
-    try {
-        $pdo = Database::getInstance();
-        $stmt = $pdo->query("
-            SELECT id, nivel AS prioridad
-            FROM prioridad
-            ORDER BY nivel DESC
-        ");
-        $data = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        Response::success($data, "Prioridades obtenidas correctamente");
-    } catch (\Exception $e) {
-        Response::error("Error al obtener prioridades: " . $e->getMessage(), 500);
-    }
-?>
+$token = Auth::extractBearerFromServer();
+if ($token === null) {
+    Response::error("Token requerido", 401);
+}
+
+try {
+    $user = Auth::verificarToken($token);
+} catch (\Exception $e) {
+    Response::error("Token inválido", 401);
+}
+
+if (($user['role'] ?? '') !== 'administrador') {
+    Response::error("Permiso denegado", 403);
+}
+
+try {
+    PrioridadController::listar();
+} catch (\Throwable $e) {
+    Response::error("Error interno: " . $e->getMessage(), 500);
+}

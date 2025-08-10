@@ -112,10 +112,8 @@
 
             } catch (\Exception $e) {
                 $pdo->rollBack();
-                die(json_encode([
-                    'success' => false,
-                    'error' => $e->getMessage()
-                ]));
+                // No hacer die() ni imprimir JSON aquí. Lanzamos excepción y que el controller maneje la respuesta.
+                throw new \RuntimeException($e->getMessage());
             }
         }
 
