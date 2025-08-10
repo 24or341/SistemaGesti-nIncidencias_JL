@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../viewmodels/reportar_viewmodel.dart';
 import 'reporte_paso2_screen.dart';
 import '../main.dart';
-
+// Realizado por: Leandro Hurtado Ortiz
 /// Pantalla inicial para reportar incidencias.
 /// Permite ingresar descripción, tipo, fecha, teléfono, dirección y zona.
 /// Incluye validación y navegación al segundo paso del reporte.

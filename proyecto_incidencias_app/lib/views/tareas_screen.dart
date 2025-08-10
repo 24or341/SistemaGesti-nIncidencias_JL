@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/incidencia_model.dart';
 import '../viewmodels/tareas_viewmodel.dart';
 import 'detalle_incidencia_screen.dart';
-
+// Realizado por: Leandro Hurtado Ortiz
 /// Pantalla que muestra la lista de incidencias asignadas al empleado o
 /// todas las incidencias si el usuario es administrador.
 /// Permite actualizar el estado de cada incidencia y navegar a su detalle.

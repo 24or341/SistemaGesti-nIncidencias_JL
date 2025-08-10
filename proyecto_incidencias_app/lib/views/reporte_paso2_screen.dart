@@ -3,7 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import '../viewmodels/reportar_viewmodel.dart';
 import 'reporte_paso3_screen.dart';
-
+// Realizado por: Leandro Hurtado Ortiz
 /// Pantalla donde el usuario selecciona la ubicación de la incidencia en un mapa.
 /// Usa Google Maps para mostrar y actualizar la ubicación seleccionada.
 class ReportePaso2Screen extends StatelessWidget {

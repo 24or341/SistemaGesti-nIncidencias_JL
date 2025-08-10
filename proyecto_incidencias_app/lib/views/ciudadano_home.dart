@@ -3,6 +3,7 @@ import 'reporte_paso1_screen.dart';
 import 'historial_todo_screen.dart';
 import 'phone_input_screen.dart';
 
+// Realizado por: Leandro Hurtado Ortiz
 /// Pantalla principal para ciudadanos.
 /// Contiene navegación inferior para acceder a:
 /// - Reportar incidencia
