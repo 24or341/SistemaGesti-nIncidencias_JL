@@ -1,5 +1,5 @@
 
-# 🛠️ Sistema Web de gestión de incidentes en infraestructuras basado en Crowdsourcing para el distrito Gregorio Albarracín Lanchipa
+# 🛠️ Sistema Web y Móvil de gestión de incidencias vía PHP y Flutter para la mejora de las infraestructuras públicas del distrito Gregorio Albarracín
 
 ### INTEGRANTES:
 
