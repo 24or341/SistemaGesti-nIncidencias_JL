@@ -1,3 +1,7 @@
+
+// Realizado por: Leandro Hurtado Ortiz
+///Representa los datos de los tipos de una incidencia
+
 class TipoIncidencia {
   final int id;
   final String nombre;

@@ -1,5 +1,8 @@
 import 'dart:typed_data';
 
+// Realizado por: Leandro Hurtado Ortiz
+///Representa los datos de una incidencia
+
 class Incidencia {
   final int id;
   final String descripcion;

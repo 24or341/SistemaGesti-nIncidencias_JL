@@ -7,6 +7,9 @@ import 'package:geocoding/geocoding.dart';
 import '../models/tipo_incidencia_model.dart';
 import '../services/incidencia_service.dart';
 
+// Realizado por: Leandro Hurtado Ortiz
+/// Logica de negocio para el reporte incidencias
+
 class ReportarViewModel extends ChangeNotifier {
   final descripcionController = TextEditingController();
   final direccionController = TextEditingController();
@@ -16,7 +19,7 @@ class ReportarViewModel extends ChangeNotifier {
   LatLng selectedLocation = const LatLng(-18.03727, -70.25357);
   XFile? imagenSeleccionada;
   bool isLoading = false;
-  bool reporteExitoso = false; // Nueva bandera para mostrar pantalla de éxito
+  bool reporteExitoso = false;
 
   List<TipoIncidencia> tipos = [];
   TipoIncidencia? tipoSeleccionado;

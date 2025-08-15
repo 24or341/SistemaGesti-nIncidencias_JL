@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '../services/incidencias_empleado_service.dart';
 
+// Realizado por: Leandro Hurtado Ortiz
+/// Logica de negocio para mostrar los detalles de la incidencia
+
 class DetalleIncidenciaViewModel extends ChangeNotifier {
   Map<String, dynamic>? _incidencia;
   bool _isLoading = true;
