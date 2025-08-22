@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/incidencia_model.dart';
 import '../viewmodels/tareas_viewmodel.dart';
 import 'detalle_incidencia_screen.dart';
-// Realizado por: Leandro Hurtado Ortiz
-/// Pantalla que muestra la lista de incidencias asignadas al empleado o
-/// todas las incidencias si el usuario es administrador.
-/// Permite actualizar el estado de cada incidencia y navegar a su detalle.
+
 class TareasScreen extends StatefulWidget {
   final Map<String, dynamic> user;
 
@@ -16,18 +13,17 @@ class TareasScreen extends StatefulWidget {
 }
 
 class _TareasScreenState extends State<TareasScreen> {
-  late final TareasViewModel _tareasViewModel;
+  late TareasViewModel _viewModel;
 
   @override
   void initState() {
     super.initState();
-    // Inicializa ViewModel con datos del usuario para cargar incidencias según rol
-    _tareasViewModel = TareasViewModel(
+    _viewModel = TareasViewModel(
       widget.user['id'],
       widget.user['token'],
-      widget.user['role'],
+      widget.user['role'], // <- cambiado aquí
     );
-    _tareasViewModel.cargarIncidencias();
+    _viewModel.cargarIncidencias();
   }
 
   @override
@@ -44,7 +40,7 @@ class _TareasScreenState extends State<TareasScreen> {
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           title: Text(
-            widget.user['role'] == 'administrador'
+            widget.user['role'] == 'administrador' // <- cambiado aquí
                 ? 'Todas las Incidencias'
                 : 'Tareas Asignadas',
           ),
@@ -54,27 +50,25 @@ class _TareasScreenState extends State<TareasScreen> {
         ),
         body: SafeArea(
           child: AnimatedBuilder(
-            animation: _tareasViewModel,
+            animation: _viewModel,
             builder: (context, _) {
-              if (_tareasViewModel.isLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(color: Colors.tealAccent),
-                );
+              if (_viewModel.isLoading) {
+                return const Center(child: CircularProgressIndicator(color: Colors.tealAccent));
               }
 
-              if (_tareasViewModel.errorMessage != null) {
+              if (_viewModel.errorMessage != null) {
                 return Center(
                   child: Text(
-                    _tareasViewModel.errorMessage!,
+                    _viewModel.errorMessage!,
                     style: const TextStyle(color: Colors.white70),
                   ),
                 );
               }
 
-              if (_tareasViewModel.incidencias.isEmpty) {
+              if (_viewModel.incidencias.isEmpty) {
                 return Center(
                   child: Text(
-                    widget.user['role'] == 'administrador'
+                    widget.user['role'] == 'administrador' // <- cambiado aquí
                         ? 'No hay incidencias registradas.'
                         : 'No tienes incidencias asignadas.',
                     style: const TextStyle(color: Colors.white70),
@@ -83,11 +77,11 @@ class _TareasScreenState extends State<TareasScreen> {
               }
 
               return ListView.builder(
+                itemCount: _viewModel.incidencias.length,
                 padding: const EdgeInsets.all(12),
-                itemCount: _tareasViewModel.incidencias.length,
                 itemBuilder: (context, index) {
-                  final incidencia = _tareasViewModel.incidencias[index];
-                  return _buildIncidenciaCard(incidencia);
+                  final incidencia = _viewModel.incidencias[index];
+                  return _buildTareaCard(incidencia);
                 },
               );
             },
@@ -97,41 +91,37 @@ class _TareasScreenState extends State<TareasScreen> {
     );
   }
 
-  /// Construye la tarjeta para cada incidencia con detalles básicos y selector de estado
-  Widget _buildIncidenciaCard(Incidencia incidencia) {
-    final estado = incidencia.estado;
+  Widget _buildTareaCard(Incidencia incidencia) {
+    final estadoNombre = incidencia.estado;
     final descripcion = incidencia.descripcion.isNotEmpty
         ? incidencia.descripcion
         : 'Sin descripción';
     final direccion = incidencia.direccion ?? '';
-    final estadoId = _obtenerEstadoId(estado);
+    final estadoActualId = _estadoIdDesdeTexto(estadoNombre);
 
     return Card(
       color: Colors.white10,
       elevation: 2,
-      margin: const EdgeInsets.symmetric(vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      margin: const EdgeInsets.symmetric(vertical: 8),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         leading: const Icon(Icons.assignment_outlined, color: Colors.tealAccent),
         title: Text(
           descripcion,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (direccion.isNotEmpty)
               Text("Dirección: $direccion", style: const TextStyle(color: Colors.white70)),
-            Text("Estado actual: $estado", style: const TextStyle(color: Colors.white70)),
+            Text("Estado actual: $estadoNombre", style: const TextStyle(color: Colors.white70)),
           ],
         ),
         trailing: DropdownButton<int>(
           dropdownColor: Colors.grey[900],
-          value: estadoId,
+          value: estadoActualId,
           iconEnabledColor: Colors.tealAccent,
           style: const TextStyle(color: Colors.white),
           underline: Container(height: 0),
@@ -141,8 +131,8 @@ class _TareasScreenState extends State<TareasScreen> {
             DropdownMenuItem(value: 3, child: Text('Terminado')),
           ],
           onChanged: (nuevoEstadoId) {
-            if (nuevoEstadoId != null && nuevoEstadoId != estadoId) {
-              _tareasViewModel.actualizarEstado(
+            if (nuevoEstadoId != null && nuevoEstadoId != estadoActualId) {
+              _viewModel.actualizarEstado(
                 incidenciaId: incidencia.id,
                 nuevoEstadoId: nuevoEstadoId,
                 token: widget.user['token'],
@@ -177,8 +167,7 @@ class _TareasScreenState extends State<TareasScreen> {
     );
   }
 
-  /// Convierte el nombre del estado a un ID para el Dropdown
-  int _obtenerEstadoId(String estado) {
+  int _estadoIdDesdeTexto(String estado) {
     switch (estado) {
       case 'Pendiente':
         return 1;

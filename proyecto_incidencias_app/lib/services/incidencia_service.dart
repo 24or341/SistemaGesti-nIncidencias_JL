@@ -5,10 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import '../config.dart';
 
-// Realizado por: Leandro Hurtado Ortiz
-/// Service para operaciones de incidencias con la API.
-
-
 class IncidenciaService {
   // Registrar incidencia con imagen (multipart/form-data)
   static Future<Map<String, dynamic>> registrarIncidenciaConFoto({

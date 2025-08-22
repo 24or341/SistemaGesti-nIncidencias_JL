@@ -4,10 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../config.dart';
 
-// Realizado por: Leandro Hurtado Ortiz
-/// Service para operaciones de incidencias con la API.
-
-
 class IncidenciasEmpleadoService {
   // Obtener incidencias asignadas a un usuario con rol empleado
   static Future<List<Map<String, dynamic>>> obtenerIncidenciasAsignadas(int usuarioId, {String? token}) async {

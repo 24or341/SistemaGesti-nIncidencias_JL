@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import '../models/incidencia_model.dart';
 import '../services/incidencias_empleado_service.dart';
 
-// Realizado por: Leandro Hurtado Ortiz
-/// Logica de negocio para la gestion de incidencias
-
 class TareasViewModel extends ChangeNotifier {
   final int usuarioId;
   final String token;
-  final String rol;
+  final String rol; // nuevo campo
 
   TareasViewModel(this.usuarioId, this.token, this.rol);
 
