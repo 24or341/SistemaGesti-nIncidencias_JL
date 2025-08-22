@@ -2,7 +2,9 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../viewmodels/detalle_incidencia_viewmodel.dart';
-
+// Realizado por: Leandro Hurtado Ortiz
+/// Pantalla para mostrar el detalle completo de una incidencia.
+/// Incluye descripción, estado, fecha, imagen y ubicación en mapa.
 class DetalleIncidenciaScreen extends StatefulWidget {
   final int incidenciaId;
   final int usuarioId;

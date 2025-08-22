@@ -1,24 +1,30 @@
 import 'package:flutter/material.dart';
 import 'reporte_paso1_screen.dart';
 import 'historial_todo_screen.dart';
-import 'phone_input_screen.dart'; // Se reutiliza para ingresar número y ver historial individual
+import 'phone_input_screen.dart';
 
+// Realizado por: Leandro Hurtado Ortiz
+/// Pantalla principal para ciudadanos.
+/// Contiene navegación inferior para acceder a:
+/// - Reportar incidencia
+/// - Ver todas las incidencias
+/// - Ver incidencias propias
 class CiudadanoHome extends StatefulWidget {
-  final int initialIndex; // <-- Agregado
+  final int initialIndex;
 
-  const CiudadanoHome({super.key, this.initialIndex = 0}); // <-- Agregado
+  const CiudadanoHome({super.key, this.initialIndex = 0});
 
   @override
   State<CiudadanoHome> createState() => _CiudadanoHomeState();
 }
 
 class _CiudadanoHomeState extends State<CiudadanoHome> {
-  late int _selectedIndex; // <-- Modificado: late
+  late int _selectedIndex;
 
   @override
   void initState() {
     super.initState();
-    _selectedIndex = widget.initialIndex; // <-- Inicializado desde el widget
+    _selectedIndex = widget.initialIndex;
   }
 
   void _onItemTapped(int index) {
@@ -32,7 +38,7 @@ class _CiudadanoHomeState extends State<CiudadanoHome> {
     final List<Widget> screens = <Widget>[
       const ReportePaso1Screen(),
       const HistorialTodoScreen(),
-      const PhoneInputScreen(), // Se usará para que el ciudadano ingrese su número y vea su historial
+      const PhoneInputScreen(),
     ];
 
     return Container(

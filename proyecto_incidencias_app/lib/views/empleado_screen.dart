@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'tareas_screen.dart';
 import 'perfil_screen.dart';
 import '../models/usuario_model.dart';
-
+// Realizado por: Leandro Hurtado Ortiz
+/// Pantalla principal para empleados con navegación inferior.
+/// Permite alternar entre la vista de tareas asignadas y el perfil del usuario.
 class EmpleadoScreen extends StatefulWidget {
   final Map<String, dynamic> user;
 
