@@ -7,41 +7,41 @@
   /** @var int $terminadas */
 ?>
 
-<div class="row text-center mb-4"> // Fila de tarjetas con el resumen de incidencias
-  <div class="col-md-4 mb-3"> // Columna para las incidencias pendientes
-    <div class="card shadow-sm border-0" style="background-color: #fff3f4;"> // Tarjeta con fondo claro
-      <div class="card-body"> // Cuerpo de la tarjeta
-        <h5 class="card-title text-danger fw-bold">Pendientes</h5> // Título de la tarjeta
-        <h2 class="text-dark"><?= $pendientes ?></h2> // Número de incidencias pendientes
+<div class="row text-center mb-4">
+  <div class="col-md-4 mb-3">
+    <div class="card shadow-sm border-0" style="background-color: #fff3f4;">
+      <div class="card-body">
+        <h5 class="card-title text-danger fw-bold">Pendientes</h5>
+        <h2 class="text-dark"><?= $pendientes ?></h2>
       </div>
     </div>
-  </div> // Cierre de la columna para las incidencias pendientes
+  </div> 
 
-  <div class="col-md-4 mb-3"> // Columna para las incidencias en desarrollo
-    <div class="card shadow-sm border-0" style="background-color: #fff8e1;"> // Tarjeta con fondo claro
-      <div class="card-body"> // Cuerpo de la tarjeta
-        <h5 class="card-title text-warning fw-bold">En Desarrollo</h5> // Título de la tarjeta
-        <h2 class="text-dark"><?= $en_desarrollo ?></h2> // Número de incidencias en desarrollo
+  <div class="col-md-4 mb-3">
+    <div class="card shadow-sm border-0" style="background-color: #fff8e1;">
+      <div class="card-body">
+        <h5 class="card-title text-warning fw-bold">En Desarrollo</h5>
+        <h2 class="text-dark"><?= $en_desarrollo ?></h2>
       </div>
     </div>
-  </div> // Cierre de la columna para las incidencias en desarrollo
+  </div> 
 
-  <div class="col-md-4 mb-3"> // Columna para las incidencias terminadas
-    <div class="card shadow-sm border-0" style="background-color: #e8f5e9;"> // Tarjeta con fondo claro
-      <div class="card-body"> // Cuerpo de la tarjeta
-        <h5 class="card-title text-success fw-bold">Terminadas</h5> // Título de la tarjeta
-        <h2 class="text-dark"><?= $terminadas ?></h2> // Número de incidencias terminadas
+  <div class="col-md-4 mb-3">
+    <div class="card shadow-sm border-0" style="background-color: #e8f5e9;">
+      <div class="card-body">
+        <h5 class="card-title text-success fw-bold">Terminadas</h5>
+        <h2 class="text-dark"><?= $terminadas ?></h2>
       </div>
     </div>
   </div>
-</div> // Cierre de la fila de tarjetas
+</div> 
 
-<div class="card shadow-sm border-0 p-4 mb-4" style="background-color: #ffffff; max-width: 800px; margin: auto;"> // Tarjeta para el gráfico de incidencias
-  <h5 class="mb-3 text-center text-primary fw-semibold">Resumen gráfico de incidencias</h5> // Título del gráfico
-  <div style="position: relative; height: 350px;"> // Contenedor para el gráfico
-    <canvas id="grafico"></canvas> // Elemento canvas para el gráfico
+<div class="card shadow-sm border-0 p-4 mb-4" style="background-color: #ffffff; max-width: 800px; margin: auto;">
+  <h5 class="mb-3 text-center text-primary fw-semibold">Resumen gráfico de incidencias</h5>
+  <div style="position: relative; height: 350px;">
+    <canvas id="grafico"></canvas>
   </div>
-</div> // Cierre de la tarjeta del gráfico
+</div>
 
 <script> // Script para generar el gráfico de incidencias
   const datos = [<?= $pendientes ?>, <?= $en_desarrollo ?>, <?= $terminadas ?>]; // Datos del gráfico basados en las incidencias
@@ -104,4 +104,4 @@
       }
     } // Configuración adicional del gráfico
   });
-</script> // Cierre del script para el gráfico
+</script>

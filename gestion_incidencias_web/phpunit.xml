@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="api/tests/bootstrap.php"
+<phpunit bootstrap="tests/bootstrap.php"
          colors="true"
          verbose="true">
     <testsuites>
         <testsuite name="App Test Suite">
-            <directory>api/tests</directory>
+            <directory>tests/Feature</directory>
         </testsuite>
     </testsuites>
     <php>
+        <env name="TEST_BASE" value="${TEST_BASE}"/>
         <env name="DB_HOST" value="localhost"/>
         <env name="DB_PORT" value="5432"/>
         <env name="DB_NAME" value="dbGestionJL"/>

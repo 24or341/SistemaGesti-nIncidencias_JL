@@ -22,61 +22,61 @@
    */
 ?>
 
-<h2 class="mb-4 text-center fw-bold text-primary" style="letter-spacing: 1px;">Listado de Incidencias</h2> // Verifica si hay un mensaje de error y lo muestra
+<h2 class="mb-4 text-center fw-bold text-primary" style="letter-spacing: 1px;">Listado de Incidencias</h2> 
 
-<?php if (!empty($errorInc)): ?> // Verifica si hay un mensaje de error y lo muestra
-  <div class="alert alert-danger shadow-sm"><?= htmlspecialchars($errorInc) ?></div> // Muestra el mensaje de error si existe
-<?php endif; ?> // Verifica si hay un mensaje de error y lo muestra
-<?php if (!empty($errorEmp)): ?> // Verifica si hay un mensaje de error y lo muestra
-  <div class="alert alert-warning shadow-sm"><?= htmlspecialchars($errorEmp) ?></div> // Muestra el mensaje de error si existe
-<?php endif; ?> // Filtros de búsqueda y selección
+<?php if (!empty($errorInc)): ?>
+  <div class="alert alert-danger shadow-sm"><?= htmlspecialchars($errorInc) ?></div>
+<?php endif; ?>
+<?php if (!empty($errorEmp)): ?>
+  <div class="alert alert-warning shadow-sm"><?= htmlspecialchars($errorEmp) ?></div>
+<?php endif; ?>
 
-<div class="row mb-4 g-2"> // Crea una fila para los filtros de búsqueda
-  <div class="col-md-3"> // Columna para el campo de búsqueda
-    <input type="text" id="busqueda" class="form-control form-control-sm border-primary shadow-sm" placeholder="Buscar por descripción, estado, tipo..."> // Campo de búsqueda para filtrar incidencias
-  </div> // Columna para el filtro de prioridad
-  <div class="col-md-2"> // Columna para el filtro de prioridad
-    <select id="filtro-prioridad" class="form-select form-select-sm border-primary shadow-sm"> // Filtro de prioridad
-      <option value="">Prioridad...</option> // Opción por defecto del filtro de prioridad
-      <?php foreach ($prioridades as $p): ?> // Itera sobre las prioridades disponibles
-        <option value="<?= htmlspecialchars($p['prioridad']) ?>"> // Muestra cada prioridad en el filtro
-          <?= htmlspecialchars($p['prioridad']) ?> // Muestra el nombre de la prioridad
-        </option> // Cierra la opción del filtro de prioridad
-      <?php endforeach; ?> // Cierra el bucle de iteración sobre las prioridades
-    </select> // Cierra el filtro de prioridad
-  </div> // Columna para los filtros de fecha
-  <div class="col-md-4 d-flex"> // Columna para los filtros de fecha
-    <input type="date" id="fecha-desde" class="form-control form-control-sm me-2 border-primary shadow-sm" placeholder="Desde"> // Campo para seleccionar la fecha de inicio del filtro
-    <input type="date" id="fecha-hasta" class="form-control form-control-sm border-primary shadow-sm" placeholder="Hasta"> // Campo para seleccionar la fecha de fin del filtro
-  </div> // Columna para el botón de recargar
-</div> // Cierra la fila de filtros
+<div class="row mb-4 g-2">
+  <div class="col-md-3">
+    <input type="text" id="busqueda" class="form-control form-control-sm border-primary shadow-sm" placeholder="Buscar por descripción, estado, tipo...">
+  </div>
+  <div class="col-md-2">
+    <select id="filtro-prioridad" class="form-select form-select-sm border-primary shadow-sm">
+      <option value="">Prioridad...</option>
+      <?php foreach ($prioridades as $p): ?>
+        <option value="<?= htmlspecialchars($p['prioridad']) ?>">
+          <?= htmlspecialchars($p['prioridad']) ?>
+        </option>
+      <?php endforeach; ?>
+    </select>
+  </div>
+  <div class="col-md-4 d-flex">
+    <input type="date" id="fecha-desde" class="form-control form-control-sm me-2 border-primary shadow-sm" placeholder="Desde">
+    <input type="date" id="fecha-hasta" class="form-control form-control-sm border-primary shadow-sm" placeholder="Hasta">
+  </div>
+</div>
 
-<div class="table-responsive rounded shadow-sm"> // Crea una tabla para mostrar las incidencias
-  <table class="table table-bordered table-hover table-sm bg-white"> // Crea una tabla para mostrar las incidencias
-    <thead class="table-primary text-center align-middle"> // Define el encabezado de la tabla
-      <tr style="font-size: 0.9rem;"> // Define las columnas de la tabla
-        <th>ID</th> // Columna para el ID de la incidencia
-        <th>Tipo</th> // Columna para el tipo de incidencia
-        <th>Estado</th> // Columna para el estado de la incidencia
-        <th>Prioridad</th> // Columna para la prioridad de la incidencia
-        <th>Descripción</th> // Columna para la descripción de la incidencia
-        <th>Ubicación</th> // Columna para la ubicación de la incidencia
-        <th>Fecha</th> // Columna para la fecha de reporte de la incidencia
-        <th>Asignar</th> // Columna para asignar la incidencia a un empleado
-      </tr> // Cierra las columnas de la tabla 
-    </thead> // Cierra el encabezado de la tabla
-    <tbody class="align-middle"> // Cuerpo de la tabla donde se mostrarán los datos de las incidencias
-      <?php if (empty($incidencias)): ?> // Verifica si no hay incidencias registradas
-        <tr> // Crea una fila para mostrar un mensaje si no hay incidencias
-          <td colspan="8" class="text-center text-muted">No hay incidencias reportadas.</td> // Mensaje indicando que no hay incidencias registradas
-        </tr> // Cierra la fila de mensaje
-      <?php else: ?> // Si hay incidencias registradas, itera sobre ellas para mostrarlas
-        <?php foreach ($incidencias as $inc): ?> // Itera sobre cada incidencia en el array $incidencias
-          <tr> // Crea una fila para cada incidencia
-            <td class="text-center">#<?= htmlspecialchars($inc['id']) ?></td> // Muestra el ID de la incidencia
-            <td><?= htmlspecialchars($inc['tipo']) ?></td> // Muestra el tipo de incidencia
+<div class="table-responsive rounded shadow-sm">
+  <table class="table table-bordered table-hover table-sm bg-white">
+    <thead class="table-primary text-center align-middle">
+      <tr style="font-size: 0.9rem;">
+        <th>ID</th>
+        <th>Tipo</th>
+        <th>Estado</th>
+        <th>Prioridad</th>
+        <th>Descripción</th>
+        <th>Ubicación</th>
+        <th>Fecha</th>
+        <th>Asignar</th>
+      </tr>
+    </thead>
+    <tbody class="align-middle">
+      <?php if (empty($incidencias)): ?>
+        <tr>
+          <td colspan="8" class="text-center text-muted">No hay incidencias reportadas.</td>
+        </tr>
+      <?php else: ?>
+        <?php foreach ($incidencias as $inc): ?>
+          <tr>
+            <td class="text-center">#<?= htmlspecialchars($inc['id']) ?></td>
+            <td><?= htmlspecialchars($inc['tipo']) ?></td> 
 
-            <td> // Muestra el estado de la incidencia
+            <td> 
               <?php
                 $estado = strtolower($inc['estado']); // Convierte el estado a minúsculas para comparación
                 $estadoClase = match ($estado) { // Asigna una clase CSS según el estado de la incidencia
@@ -86,21 +86,21 @@
                   default => 'bg-secondary-subtle text-secondary' // Estado desconocido o no definido
                 };
               ?>
-              <span class="badge <?= $estadoClase ?>"><?= htmlspecialchars($inc['estado']) ?></span> // Muestra el estado de la incidencia con la clase correspondiente
+              <span class="badge <?= $estadoClase ?>"><?= htmlspecialchars($inc['estado']) ?></span> 
             </td>
 
             <td>
-              <?php if ($inc['estado'] === 'Pendiente'): ?> // Si la incidencia está pendiente, permite seleccionar una prioridad
-                <select class="form-select form-select-sm" id="select-prio-<?= $inc['id'] ?>"> // Crea un selector para la prioridad
-                  <option value="">Prioridad…</option> // Opción por defecto del selector de prioridad
-                  <?php foreach ($prioridades as $p): ?> // Itera sobre las prioridades disponibles
-                    <option value="<?= htmlspecialchars($p['id']) ?>"> // Muestra cada prioridad en el selector
-                      <?= htmlspecialchars($p['prioridad']) ?> // Muestra el nombre de la prioridad
-                    </option> // Cierra la opción del selector de prioridad
-                  <?php endforeach; ?> // Cierra el bucle de iteración sobre las prioridades
-                </select> // Cierra el selector de prioridad
-              <?php else: ?> // Si la incidencia no está pendiente, muestra la prioridad asignada
-                <?php 
+              <?php if ($inc['estado'] === 'Pendiente'): ?>
+                <select class="form-select form-select-sm" id="select-prio-<?= $inc['id'] ?>">
+                  <option value="">Prioridad…</option>
+                  <?php foreach ($prioridades as $p): ?>
+                    <option value="<?= htmlspecialchars($p['id']) ?>">
+                      <?= htmlspecialchars($p['prioridad']) ?>
+                    </option>
+                  <?php endforeach; ?>
+                </select>
+              <?php else: ?>
+                <?php
                   $prioridad = strtolower($inc['prioridad'] ?? ''); // Convierte la prioridad a minúsculas para comparación
                   $colorClase = match ($prioridad) { // Asigna una clase CSS según la prioridad de la incidencia
                     'alta' => 'bg-danger-subtle text-danger', // Prioridad alta
@@ -111,47 +111,47 @@
                 ?>
                 <?= $prioridad // Muestra la prioridad de la incidencia con la clase correspondiente
                     ? "<span class='badge $colorClase'>" . htmlspecialchars($inc['prioridad']) . "</span>" // Muestra la prioridad de la incidencia
-                    : '<span class="text-muted">—</span>' ?> // Si no hay prioridad asignada, muestra un guion
-              <?php endif; ?> // Cierra la verificación de prioridad
+                    : '<span class="text-muted">—</span>' ?> 
+              <?php endif; ?> 
             </td>
 
-            <td><?= htmlspecialchars($inc['descripcion']) ?></td> // Muestra la descripción de la incidencia
-            <td><small><?= htmlspecialchars($inc['latitud']) ?>, <?= htmlspecialchars($inc['longitud']) ?></small></td> // Muestra la ubicación de la incidencia
-            <td><?= htmlspecialchars($inc['fecha_reporte']) ?></td> // Muestra la fecha de reporte de la incidencia
+            <td><?= htmlspecialchars($inc['descripcion']) ?></td>
+            <td><small><?= htmlspecialchars($inc['latitud']) ?>, <?= htmlspecialchars($inc['longitud']) ?></small></td>
+            <td><?= htmlspecialchars($inc['fecha_reporte']) ?></td>
 
             <td>
-              <?php if ($inc['estado'] === 'Pendiente'): ?> // Si la incidencia está pendiente, permite asignarla a un empleado
-                <div class="d-flex flex-column"> // Crea un contenedor para los controles de asignación
-                  <div class="d-flex mb-2"> // Crea un selector para elegir un empleado
-                    <select class="form-select form-select-sm" id="select-emp-<?= $inc['id'] ?>"> // Crea un selector para elegir un empleado
-                      <option value="">Empleado…</option> // Opción por defecto del selector de empleados
-                      <?php foreach ($empleados as $emp): ?> // Itera sobre los empleados disponibles
-                        <?php if (isset($inc['empleado_id']) && $inc['empleado_id'] == $emp['id']) continue; ?> // Si la incidencia ya tiene un empleado asignado, lo omite
-                        <option value="<?= htmlspecialchars($emp['id']) ?>"> // Muestra cada empleado en el selector
-                          <?= htmlspecialchars($emp['nombre'] . ' ' . $emp['apellido']) ?> // Muestra el nombre y apellido del empleado
-                        </option> // Cierra la opción del selector de empleados
-                      <?php endforeach; ?> // Cierra el bucle de iteración sobre los empleados
-                    </select> // Cierra el selector de empleados
-                  </div> // Crea un selector para elegir la fecha de resolución
-                  <div class="d-flex"> // Crea un contenedor para el selector de fecha y el botón de asignación
+              <?php if ($inc['estado'] === 'Pendiente'): ?>
+                <div class="d-flex flex-column">
+                  <div class="d-flex mb-2">
+                    <select class="form-select form-select-sm" id="select-emp-<?= $inc['id'] ?>">
+                      <option value="">Empleado…</option>
+                      <?php foreach ($empleados as $emp): ?>
+                        <?php if (isset($inc['empleado_id']) && $inc['empleado_id'] == $emp['id']) continue; ?>
+                        <option value="<?= htmlspecialchars($emp['id']) ?>">
+                          <?= htmlspecialchars($emp['nombre'] . ' ' . $emp['apellido']) ?>
+                        </option>
+                      <?php endforeach; ?>
+                    </select>
+                  </div>
+                  <div class="d-flex">
                     <input type="date"
                            id="fecha-<?= $inc['id'] ?>"
                            class="form-control form-control-sm me-2"
                            min="<?= date('Y-m-d') ?>"
                            placeholder="Fecha de resolución">
-                    <button onclick="assignIncidencia(<?= $inc['id'] ?>)" class="btn btn-sm btn-outline-primary">✔</button> // Botón para asignar la incidencia al empleado seleccionado con la fecha programada
-                  </div> // Cierra el contenedor de fecha y botón
-                </div> // Cierra el contenedor de controles de asignación
-              <?php else: ?> // Si la incidencia no está pendiente, muestra el empleado asignado
-                <span class="text-muted">—</span> // Si no hay empleado asignado, muestra un guion
-              <?php endif; ?> // Cierra la verificación de estado de la incidencia
-            </td> // Cierra la columna de asignación
-          </tr> // Cierra la fila de la incidencia
-        <?php endforeach; ?> // Cierra el bucle de iteración sobre las incidencias
-      <?php endif; ?> // Cierra la verificación de incidencias registradas
-    </tbody> // Cierra el cuerpo de la tabla
-  </table> // Cierra la tabla
-</div> // Cierra el contenedor de la tabla
+                    <button onclick="assignIncidencia(<?= $inc['id'] ?>)" class="btn btn-sm btn-outline-primary">✔</button>
+                  </div>
+                </div>
+              <?php else: ?>
+                <span class="text-muted">—</span>
+              <?php endif; ?>
+            </td>
+          </tr>
+        <?php endforeach; ?>
+      <?php endif; ?>
+    </tbody>
+  </table>
+</div> 
 
 <script> // Configuración de la API y funciones para asignar incidencias
   const API_BASE = '<?= API_BASE ?>'; // Base URL de la API
@@ -238,4 +238,4 @@
       });
     }
   });
-</script> // Cierra el script de configuración y funciones
+</script>

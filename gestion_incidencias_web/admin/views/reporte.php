@@ -9,43 +9,43 @@
   $title = 'Reportes Estadísticos'; // Título de la página
 ?>
 
-<h2 class="mb-4 text-center text-primary fw-bold" style="letter-spacing: 1px;"> // Reporte de Incidencias por Empleado
-  <?= htmlspecialchars($title) ?> // Título de la página
-</h2> // Formulario para seleccionar rango de fechas
+<h2 class="mb-4 text-center text-primary fw-bold" style="letter-spacing: 1px;">
+  <?= htmlspecialchars($title) ?>
+</h2>
 
-<form class="row g-3 mb-5 justify-content-center bg-white border rounded shadow-sm py-3 px-2" method="get" action="<?= url('reporte') ?>"> // Formulario para seleccionar rango de fechas
-  <input type="hidden" name="path" value="reporte"> // Campo oculto para mantener la ruta
-  <div class="col-md-3"> // Campo para seleccionar fecha de inicio
-    <label for="inicio" class="form-label">Desde:</label> // Etiqueta para el campo de fecha de inicio
-    <input type="date" id="inicio" name="inicio" class="form-control border-primary shadow-sm" value="<?= htmlspecialchars($inicio) ?>"> // Campo de entrada para la fecha de inicio
+<form class="row g-3 mb-5 justify-content-center bg-white border rounded shadow-sm py-3 px-2" method="get" action="<?= url('reporte') ?>">
+  <input type="hidden" name="path" value="reporte"> 
+  <div class="col-md-3">
+    <label for="inicio" class="form-label">Desde:</label>
+    <input type="date" id="inicio" name="inicio" class="form-control border-primary shadow-sm" value="<?= htmlspecialchars($inicio) ?>">
   </div>
-  <div class="col-md-3"> // Campo para seleccionar fecha de fin
-    <label for="fin" class="form-label">Hasta:</label> // Etiqueta para el campo de fecha de fin
-    <input type="date" id="fin" name="fin" class="form-control border-primary shadow-sm" value="<?= htmlspecialchars($fin) ?>"> // Campo de entrada para la fecha de fin
-  </div> // Botón para aplicar el rango de fechas
-  <div class="col-md-2 align-self-end d-grid"> // Botón para aplicar el rango de fechas
-    <button type="submit" class="btn btn-outline-primary shadow-sm fw-semibold"> // Botón para aplicar el rango de fechas
+  <div class="col-md-3">
+    <label for="fin" class="form-label">Hasta:</label>
+    <input type="date" id="fin" name="fin" class="form-control border-primary shadow-sm" value="<?= htmlspecialchars($fin) ?>">
+  </div>
+  <div class="col-md-2 align-self-end d-grid">
+    <button type="submit" class="btn btn-outline-primary shadow-sm fw-semibold">
       ✔ Aplicar rango
-    </button> // Botón para aplicar el rango de fechas
+    </button>
   </div>
 </form>
 
-<div class="row g-4 mb-5"> // Contenedor para los gráficos
-  <div class="col-md-6"> // Gráfico de incidencias por estado
-    <div class="bg-white rounded shadow-sm p-3"> // Contenedor del gráfico de incidencias por estado
-      <h5 class="text-center mb-3 fw-semibold">📊 Incidencias por Estado</h5>  // Título del gráfico de incidencias por estado
-      <canvas id="graficoEstado" height="280"></canvas> // Elemento canvas para el gráfico de incidencias por estado
+<div class="row g-4 mb-5">
+  <div class="col-md-6"> 
+    <div class="bg-white rounded shadow-sm p-3"> 
+      <h5 class="text-center mb-3 fw-semibold">📊 Incidencias por Estado</h5>  
+      <canvas id="graficoEstado" height="280"></canvas> 
     </div>
   </div>
-  <div class="col-md-6"> // Gráfico de incidencias por tipo
-    <div class="bg-white rounded shadow-sm p-3"> // Contenedor del gráfico de incidencias por tipo
-      <h5 class="text-center mb-3 fw-semibold">📌 Incidencias por Tipo</h5> // Título del gráfico de incidencias por tipo
-      <canvas id="graficoTipo" height="280"></canvas> // Elemento canvas para el gráfico de incidencias por tipo
+  <div class="col-md-6">
+    <div class="bg-white rounded shadow-sm p-3">
+      <h5 class="text-center mb-3 fw-semibold">📌 Incidencias por Tipo</h5>
+      <canvas id="graficoTipo" height="280"></canvas>
     </div>
   </div>
 </div> 
 
-<div class="text-center mb-4 d-flex justify-content-center gap-3"> // Botón para exportar el reporte a PDF por empleado
+<div class="text-center mb-4 d-flex justify-content-center gap-3"> 
   <a href="<?= url('reporte/exportPdf') . "&inicio={$inicio}&fin={$fin}" ?>"
      class="btn btn-outline-success shadow-sm fw-semibold">
     📄 Exportar PDF por Empleado
@@ -109,4 +109,4 @@
       }
     }
   });
-</script> // Fin del script de configuración de gráficos
+</script>

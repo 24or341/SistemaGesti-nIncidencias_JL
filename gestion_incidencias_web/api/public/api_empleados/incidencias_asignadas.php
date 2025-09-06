@@ -29,7 +29,10 @@ if (!isset($_GET['usuario_id'])) {
     Response::error("ID del usuario requerido", 422);
 }
 
-$empleadoId = (int) $_GET['usuario_id'];
+$empleadoId = (int)($user['user_id'] ?? 0);
+if ($empleadoId <= 0) {
+    Response::error("Token inválido (sin user_id)", 401);
+}
 
 try {
     IncidenciaController::obtenerPorEmpleado($empleadoId);
