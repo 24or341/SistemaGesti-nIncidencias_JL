@@ -3,20 +3,26 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../viewmodels/detalle_incidencia_viewmodel.dart';
 // Realizado por: Leandro Hurtado Ortiz
+// Fecha de creación: 2025-05-10
+// Requerimiento: RF05 – Monitoreo y Actualización de Incidencias
 /// Pantalla para mostrar el detalle completo de una incidencia.
-/// Incluye descripción, estado, fecha, imagen y ubicación en mapa.
+/// Permite visualizar:
+/// - Descripción, estado y fecha de reporte.
+/// - Imagen reportada (si está disponible).
+/// - Ubicación geográfica en mapa con marcador.
+/// Ejecución: se abre desde `TareasScreen` al seleccionar una incidencia de la lista.
 class DetalleIncidenciaScreen extends StatefulWidget {
   final int incidenciaId;
   final int usuarioId;
   final String token;
-  final String role; // <- CAMBIO AQUÍ
+  final String role;
 
   const DetalleIncidenciaScreen({
     super.key,
     required this.incidenciaId,
     required this.usuarioId,
     required this.token,
-    required this.role, // <- CAMBIO AQUÍ
+    required this.role,
   });
 
   @override
@@ -35,7 +41,7 @@ class _DetalleIncidenciaScreenState extends State<DetalleIncidenciaScreen> {
       widget.usuarioId,
       widget.incidenciaId,
       widget.token,
-      widget.role, // <- CAMBIO AQUÍ
+      widget.role,
     );
   }
 

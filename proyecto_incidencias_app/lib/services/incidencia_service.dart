@@ -5,6 +5,18 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import '../config.dart';
 
+// Realizado por: Leandro Hurtado Ortiz
+// Fecha de creación: 2025-05-10
+// Requerimiento: RF01 – Reporte de incidencias
+/// Servicio para interactuar con la API de incidencias.
+/// Encargado de realizar las operaciones HTTP relacionadas con el flujo de reporte:
+/// - Registrar incidencia con o sin foto (multipart/form-data).
+/// - Obtener lista de tipos de incidencia.
+/// - Obtener todas las incidencias o solo las de un ciudadano.
+/// - Validar o registrar ciudadanos a partir de su número de celular.
+/// Ejecución: invocado desde `ReportarViewModel` en los pasos 1, 2 y 3 del flujo.
+/// Modificaciones: (si las hubiera, aquí se añade fecha + RF que motivó el cambio).
+
 class IncidenciaService {
   // Registrar incidencia con imagen (multipart/form-data)
   static Future<Map<String, dynamic>> registrarIncidenciaConFoto({

@@ -4,8 +4,11 @@ import 'package:provider/provider.dart';
 import '../viewmodels/reportar_viewmodel.dart';
 import 'reporte_paso3_screen.dart';
 // Realizado por: Leandro Hurtado Ortiz
+// Fecha de creación: 2025-07-12
+// Requerimiento: RF01 – Reporte de incidencias
 /// Pantalla donde el usuario selecciona la ubicación de la incidencia en un mapa.
 /// Usa Google Maps para mostrar y actualizar la ubicación seleccionada.
+/// Ejecución: se carga tras completar el Paso 1 del reporte de incidencia.
 class ReportePaso2Screen extends StatelessWidget {
   const ReportePaso2Screen({super.key});
 

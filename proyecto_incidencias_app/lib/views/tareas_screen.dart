@@ -3,9 +3,14 @@ import '../models/incidencia_model.dart';
 import '../viewmodels/tareas_viewmodel.dart';
 import 'detalle_incidencia_screen.dart';
 // Realizado por: Leandro Hurtado Ortiz
-/// Pantalla que muestra la lista de incidencias asignadas al empleado o
-/// todas las incidencias si el usuario es administrador.
-/// Permite actualizar el estado de cada incidencia y navegar a su detalle.
+// Fecha de creación: 2025-05-10
+// Requerimiento: RF05 – Monitoreo y Actualización de Incidencias
+/// Pantalla que muestra la lista de incidencias asignadas al empleado o todas las incidencias en caso de rol administrador.
+/// Permite:
+/// - Visualizar la descripción, dirección y estado actual de cada incidencia.
+/// - Actualizar el estado de la incidencia (Pendiente, En Desarrollo, Terminado).
+/// - Acceder al detalle de la incidencia seleccionada.
+/// Ejecución: se carga dentro de `EmpleadoScreen` al seleccionar la pestaña de Tareas.
 class TareasScreen extends StatefulWidget {
   final Map<String, dynamic> user;
 
@@ -24,7 +29,7 @@ class _TareasScreenState extends State<TareasScreen> {
     _viewModel = TareasViewModel(
       widget.user['id'],
       widget.user['token'],
-      widget.user['role'], // <- cambiado aquí
+      widget.user['role'],
     );
     _viewModel.cargarIncidencias();
   }
@@ -43,7 +48,7 @@ class _TareasScreenState extends State<TareasScreen> {
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           title: Text(
-            widget.user['role'] == 'administrador' // <- cambiado aquí
+            widget.user['role'] == 'administrador'
                 ? 'Todas las Incidencias'
                 : 'Tareas Asignadas',
           ),

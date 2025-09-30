@@ -4,9 +4,12 @@ import '../viewmodels/reportar_viewmodel.dart';
 import 'reporte_paso2_screen.dart';
 import '../main.dart';
 // Realizado por: Leandro Hurtado Ortiz
+// Fecha de creación: 2025-07-12
+// Requerimiento: RF01 – Reporte de incidencias
 /// Pantalla inicial para reportar incidencias.
 /// Permite ingresar descripción, tipo, fecha, teléfono, dirección y zona.
 /// Incluye validación y navegación al segundo paso del reporte.
+/// Ejecución: se invoca desde el menú principal al seleccionar "Reportar incidencia".
 class ReportePaso1Screen extends StatelessWidget {
   const ReportePaso1Screen({super.key});
 

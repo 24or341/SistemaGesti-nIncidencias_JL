@@ -3,8 +3,13 @@ import 'tareas_screen.dart';
 import 'perfil_screen.dart';
 import '../models/usuario_model.dart';
 // Realizado por: Leandro Hurtado Ortiz
+// Fecha de creación: 2025-05-10
+// Requerimiento: RF05 – Monitoreo y Actualización de Incidencias
 /// Pantalla principal para empleados con navegación inferior.
-/// Permite alternar entre la vista de tareas asignadas y el perfil del usuario.
+/// Permite alternar entre:
+/// - Vista de tareas asignadas (incidencias que el empleado debe atender).
+/// - Vista del perfil del usuario (información personal del empleado).
+/// Ejecución: se carga después de que un empleado inicia sesión correctamente.
 class EmpleadoScreen extends StatefulWidget {
   final Map<String, dynamic> user;
 

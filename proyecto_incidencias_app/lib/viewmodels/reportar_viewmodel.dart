@@ -7,6 +7,19 @@ import 'package:geocoding/geocoding.dart';
 import '../models/tipo_incidencia_model.dart';
 import '../services/incidencia_service.dart';
 
+// Realizado por: Leandro Hurtado Ortiz
+// Fecha de creación: 2025-06-07
+// Requerimiento: RF01 – Reporte de incidencias
+/// ViewModel que gestiona el flujo completo de reporte de incidencias (pasos 1, 2 y 3).
+/// Encargado de:
+/// - Manejar controladores de texto (descripción, dirección, zona, celular).
+/// - Administrar la ubicación seleccionada en el mapa.
+/// - Validar o crear ciudadanos según el número de celular.
+/// - Cargar y seleccionar tipos de incidencia.
+/// - Seleccionar o tomar fotos como evidencia.
+/// - Enviar el reporte final a través del servicio de incidencias.
+/// Ejecución: se instancia en `ReportePaso1Screen` y se comparte entre las pantallas `ReportePaso2Screen` y `ReportePaso3Screen`.
+
 class ReportarViewModel extends ChangeNotifier {
   final descripcionController = TextEditingController();
   final direccionController = TextEditingController();

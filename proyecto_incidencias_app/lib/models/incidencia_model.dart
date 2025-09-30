@@ -1,3 +1,14 @@
+// Realizado por: Leandro Hurtado Ortiz
+// Fecha de creación: 2025-06-07
+// Requerimiento: RF05 – Monitoreo y Actualización de Incidencias
+// Modelo de datos que representa una incidencia reportada.
+// Contiene atributos principales:
+// - Identificador, descripción, estado y fecha de reporte.
+// - Dirección, zona y coordenadas geográficas.
+// - Foto (en bytes) y tipo de incidencia.
+// Incluye métodos de serialización (`fromJson` y `toJson`) para intercambiar datos con la API.
+// Ejecución: utilizado en `TareasViewModel`, `DetalleIncidenciaViewModel` y pantallas relacionadas al monitoreo de incidencias.
+
 import 'dart:typed_data';
 
 class Incidencia {

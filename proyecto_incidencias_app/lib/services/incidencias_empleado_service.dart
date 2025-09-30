@@ -4,6 +4,19 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../config.dart';
 
+// Realizado por: Leandro Hurtado Ortiz
+// Fecha de creación: 2025-05-10
+// Requerimiento: RF05 – Monitoreo y Actualización de Incidencias
+/// Servicio que conecta la aplicación con la API de empleados/administradores.
+/// Funciones principales:
+/// - Obtener incidencias asignadas a un empleado.
+/// - Obtener todas las incidencias (modo administrador).
+/// - Obtener detalle de una incidencia específica (empleado o administrador).
+/// - Actualizar el estado de una incidencia.
+/// Procesa la conversión de imágenes en base64 a bytes.
+/// Ejecución: utilizado por `TareasViewModel` y `DetalleIncidenciaViewModel`
+/// para alimentar las pantallas `TareasScreen` y `DetalleIncidenciaScreen`.
+
 class IncidenciasEmpleadoService {
   // Obtener incidencias asignadas a un usuario con rol empleado
   static Future<List<Map<String, dynamic>>> obtenerIncidenciasAsignadas(int usuarioId, {String? token}) async {

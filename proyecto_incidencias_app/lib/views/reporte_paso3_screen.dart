@@ -4,8 +4,11 @@ import 'package:provider/provider.dart';
 import '../viewmodels/reportar_viewmodel.dart';
 import 'ciudadano_home.dart';
 // Realizado por: Leandro Hurtado Ortiz
+// Fecha de creación: 2025-07-12
+// Requerimiento: RF01 – Reporte de incidencias
 /// Pantalla final para subir la foto de evidencia y enviar el reporte de incidencia.
-/// Muestra estados según el progreso: subida, éxito o error.
+/// Muestra diferentes estados según el progreso: selección de imagen, subida exitosa o error.
+/// Ejecución: se carga tras completar el Paso 2 del reporte de incidencia.
 class ReportePaso3Screen extends StatelessWidget {
   const ReportePaso3Screen({super.key});
 

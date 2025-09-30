@@ -2,10 +2,20 @@ import 'package:flutter/material.dart';
 import '../models/incidencia_model.dart';
 import '../services/incidencias_empleado_service.dart';
 
+// Realizado por: Leandro Hurtado Ortiz
+// Fecha de creación: 2025-06-07
+// Requerimiento: RF05 – Monitoreo y Actualización de Incidencias
+/// ViewModel que gestiona la lógica de tareas asignadas y todas las incidencias.
+/// Funciones principales:
+/// - Cargar incidencias según el rol (empleado → asignadas, administrador → todas).
+/// - Exponer estados de carga y mensajes de error para la vista.
+/// - Actualizar el estado de una incidencia y refrescar la lista.
+/// Ejecución: utilizado por `TareasScreen` para mostrar y gestionar incidencias.
+
 class TareasViewModel extends ChangeNotifier {
   final int usuarioId;
   final String token;
-  final String rol; // nuevo campo
+  final String rol;
 
   TareasViewModel(this.usuarioId, this.token, this.rol);
 

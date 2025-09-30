@@ -4,11 +4,14 @@ import 'historial_todo_screen.dart';
 import 'phone_input_screen.dart';
 
 // Realizado por: Leandro Hurtado Ortiz
+// Fecha de creación: 2025-05-10
+// Requerimiento: RF01 – Reporte de incidencias
 /// Pantalla principal para ciudadanos.
 /// Contiene navegación inferior para acceder a:
-/// - Reportar incidencia
-/// - Ver todas las incidencias
-/// - Ver incidencias propias
+/// - Reportar incidencia (flujo que dirige a los pasos 1, 2 y 3)
+/// - Ver todas las incidencias registradas
+/// - Ver únicamente las incidencias propias del ciudadano
+/// Ejecución: se carga tras iniciar sesión o registrarse como ciudadano.
 class CiudadanoHome extends StatefulWidget {
   final int initialIndex;
 
