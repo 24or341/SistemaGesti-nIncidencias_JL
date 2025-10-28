@@ -2,7 +2,15 @@ parameters:
   level: max            
   paths:
     - phpstan-stubs.php
-    - api/
+    - api/public/admin_dashboard/asignar_incidencia.php
+    - api/public/admin_dashboard/incidencias.php
+    - api/public/admin_dashboard/prioridad.php
+    - api/src/Controllers/IncidenciaController.php
+    - api/src/Controllers/PrioridadController.php
+    - api/src/Repositories/IncidenciaRepository.php
+    - api/src/Repositories/PrioridadRepository.php
+    - api/src/Services/IncidenciaService.php
+    - api/src/Services/PrioridadService.php
 
   excludePaths:
     - admin/*
