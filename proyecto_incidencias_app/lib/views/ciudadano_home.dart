@@ -5,7 +5,7 @@ import 'phone_input_screen.dart';
 
 // Realizado por: Leandro Hurtado Ortiz
 // Fecha de creación: 2025-05-10
-// Requerimiento: RF01 – Reporte de incidencias
+// Requerimiento: RF01 – Reporte de incidencias / RF08 – Visualización de otras incidencias
 /// Pantalla principal para ciudadanos.
 /// Contiene navegación inferior para acceder a:
 /// - Reportar incidencia (flujo que dirige a los pasos 1, 2 y 3)

@@ -2,6 +2,14 @@ import 'package:flutter/material.dart';
 import '../models/incidencia_model.dart';
 import '../services/incidencia_service.dart';
 
+// Realizado por: Leandro Hurtado Ortiz
+// Fecha de creación: 2025-05-10
+// Requerimiento: RF08 – Visualización de otras incidencias
+/// Descripción breve: ViewModel que gestiona la carga de incidencias (por ciudadano y sin filtro) y expone estado reactivo (isLoading, errorMessage, incidencias).
+/// Ejecución / Sintaxis: Usar con Provider y llamar a:
+///   - cargarHistorial(ciudadanoId) para “Mis incidencias”
+///   - cargarHistorialSinFiltro() para “Todas”
+
 class HistorialViewModel extends ChangeNotifier {
   List<Incidencia> _incidencias = [];
   bool _isLoading = false;

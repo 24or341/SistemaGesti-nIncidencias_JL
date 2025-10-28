@@ -4,6 +4,13 @@ import '../viewmodels/historial_viewmodel.dart';
 import '../models/incidencia_model.dart';
 import '../main.dart';
 
+// Realizado por: Leandro Hurtado Ortiz
+// Fecha de creación: 2025-05-10
+// Requerimiento: RF08 – Visualización de otras incidencias
+/// Descripción breve: Pantalla que lista todas las incidencias del sistema con soporte MVVM (Provider + ViewModel).
+/// Ejecución / Sintaxis: Se accede desde CiudadanoHome → opción “Todas”. Usa:
+///   ChangeNotifierProvider<HistorialViewModel>(create: (_) => HistorialViewModel()..cargarHistorialSinFiltro())
+
 class HistorialTodoScreen extends StatelessWidget {
   const HistorialTodoScreen({super.key});
 

@@ -3,6 +3,13 @@ import 'package:provider/provider.dart';
 import '../viewmodels/historial_viewmodel.dart';
 import '../models/incidencia_model.dart';
 
+// Realizado por: Leandro Hurtado Ortiz
+// Fecha de creación: 2025-05-11
+// Requerimiento: RF08 – Visualización de incidencias asignadas por ciudadano
+/// Descripción breve: Pantalla que muestra las incidencias personales del ciudadano autenticado, cargadas mediante el ViewModel correspondiente.
+/// Ejecución / Sintaxis: Se accede desde PhoneInputScreen tras validar el número telefónico. Usa:
+///   ChangeNotifierProvider<HistorialViewModel>(create: (_) => HistorialViewModel()..cargarHistorial(ciudadanoId))
+
 class HistorialScreen extends StatelessWidget {
   final int ciudadanoId;
 

@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import '../services/incidencia_service.dart';
 
+// Realizado por: Leandro Hurtado Ortiz
+// Fecha de creación: 2025-05-11
+// Requerimiento: RF08 – Visualización de otras incidencias
+/// Descripción breve: ViewModel encargado de validar el número telefónico del ciudadano, manejar estados de carga y error, y obtener su ID para mostrar incidencias personales.
+/// Ejecución / Sintaxis: Se usa junto a PhoneInputScreen y Provider:
+///   ChangeNotifierProvider<PhoneInputViewModel>(create: (_) => PhoneInputViewModel())
+
 class PhoneInputViewModel extends ChangeNotifier {
   final TextEditingController phoneController = TextEditingController();
   bool _isLoading = false;

@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../viewmodels/phone_input_viewmodel.dart';
-import 'historial_screen.dart'; // Redirige a historial personal
+import 'historial_screen.dart';
 import '../main.dart';
+
+// Realizado por: Leandro Hurtado Ortiz
+// Fecha de creación: 2025-05-11
+// Requerimiento: RF08 – Visualización de otras incidencias
+/// Descripción breve: Pantalla que permite al ciudadano ingresar su número telefónico para validar identidad y acceder a sus incidencias personales.
+/// Ejecución / Sintaxis: Se accede desde CiudadanoHome → opción “Mis incidencias”. Usa:
+///   ChangeNotifierProvider<PhoneInputViewModel>(create: (_) => PhoneInputViewModel())
 
 class PhoneInputScreen extends StatelessWidget {
   const PhoneInputScreen({super.key});

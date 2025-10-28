@@ -7,7 +7,7 @@ import '../config.dart';
 
 // Realizado por: Leandro Hurtado Ortiz
 // Fecha de creación: 2025-05-10
-// Requerimiento: RF01 – Reporte de incidencias
+// Requerimiento: RF01 – Reporte de incidencias / RF08 – Visualización de otras incidencias
 /// Servicio para interactuar con la API de incidencias.
 /// Encargado de realizar las operaciones HTTP relacionadas con el flujo de reporte:
 /// - Registrar incidencia con o sin foto (multipart/form-data).
