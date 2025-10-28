@@ -1,16 +1,30 @@
 <?php
-    namespace App\Repositories;
+declare(strict_types=1);
 
-    use App\Core\Database;
-    use PDO;
+namespace App\Repositories;
 
-    class PrioridadRepository
+use App\Core\Database;
+use PDO;
+
+class PrioridadRepository
+{
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public static function obtenerTodos(): array
     {
-        public static function obtenerTodos(): array
-        {
-            $pdo = Database::getInstance();
-            $stmt = $pdo->query("SELECT id, nivel as prioridad FROM prioridad ORDER BY id ASC");
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $pdo = Database::getInstance();
+
+        $sql = "SELECT id, nivel AS prioridad FROM prioridad ORDER BY id ASC";
+        $stmt = $pdo->prepare($sql);
+
+        if (!$stmt->execute()) {
+            // Evitar retornar valores inesperados si la ejecución falla
+            throw new \RuntimeException('No fue posible obtener las prioridades.');
         }
+
+        /** @var array<int, array<string, mixed>> $rows */
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $rows;
     }
-?>
+}
