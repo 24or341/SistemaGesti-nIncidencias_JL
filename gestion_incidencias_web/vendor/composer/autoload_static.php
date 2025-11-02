@@ -55,6 +55,7 @@ class ComposerStaticInitdb315e4f88970947ef7f984e2e3cb1d6
         ),
         'R' => 
         array (
+            'RobThree\\Auth\\' => 14,
             'React\\Stream\\' => 13,
             'React\\Socket\\' => 13,
             'React\\Promise\\' => 14,
@@ -202,6 +203,10 @@ class ComposerStaticInitdb315e4f88970947ef7f984e2e3cb1d6
         'Sabberworm\\CSS\\' => 
         array (
             0 => __DIR__ . '/..' . '/sabberworm/php-css-parser/src',
+        ),
+        'RobThree\\Auth\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/robthree/twofactorauth/lib',
         ),
         'React\\Stream\\' => 
         array (

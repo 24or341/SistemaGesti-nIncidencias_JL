@@ -3,7 +3,7 @@
         'name' => 'proyecto/infraestructura',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '0885474e6edabad5068bb1a362ed4bbe9febd572',
+        'reference' => '9aead74113ae8594696677a01bd8b1556e1993c7',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -319,7 +319,7 @@
         'proyecto/infraestructura' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '0885474e6edabad5068bb1a362ed4bbe9febd572',
+            'reference' => '9aead74113ae8594696677a01bd8b1556e1993c7',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -480,6 +480,15 @@
             'install_path' => __DIR__ . '/../react/stream',
             'aliases' => array(),
             'dev_requirement' => true,
+        ),
+        'robthree/twofactorauth' => array(
+            'pretty_version' => '1.8.2',
+            'version' => '1.8.2.0',
+            'reference' => '65681de5a324eae05140ac58b08648a60212afc0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../robthree/twofactorauth',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'sabberworm/php-css-parser' => array(
             'pretty_version' => 'v8.8.0',

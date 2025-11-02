@@ -8,61 +8,156 @@
 
     class AuthController // Controlador de autenticación
     {
-        public function login(): void // Método para manejar el inicio de sesión
+        public function login(): void
         {
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') { // Si no es una petición POST, muestra el formulario de login.
-                authView('login'); // Muestra la vista de login.
-                return; // Termina la ejecución si no es POST.
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                authView('login');
+                return;
             }
 
-            $emailRaw    = $_POST['email']    ?? ''; // Obtiene el email del formulario, si no existe, usa cadena vacía.
-            $email       = is_string($emailRaw)    ? trim($emailRaw)    : ''; // Normaliza el email a string y elimina espacios.
-            $passwordRaw = $_POST['password'] ?? ''; // Obtiene la contraseña del formulario, si no existe, usa cadena vacía.
-            $password    = is_string($passwordRaw) ? trim($passwordRaw) : ''; // Normaliza la contraseña a string y elimina espacios.
+            $emailRaw    = $_POST['email']    ?? '';
+            $passwordRaw = $_POST['password'] ?? '';
+            $otpRaw      = $_POST['otp']      ?? ''; // <- NUEVO (puede venir desde la vista MFA)
 
-            $ch = curl_init(API_BASE . 'login.php'); // Inicia cURL para petición al backend.
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Configura cURL para devolver el resultado como string.
+            $email    = is_string($emailRaw)    ? trim($emailRaw)    : '';
+            $password = is_string($passwordRaw) ? trim($passwordRaw) : '';
+            $otp      = is_string($otpRaw)      ? trim($otpRaw)      : '';
 
-            $payload = json_encode(['email' => $email, 'password' => $password]); // Codifica el payload a JSON.
-            if ($payload === false) { // Manejo de error en caso de fallo en json_encode.
-                throw new \RuntimeException('Error serializando JSON de login'); // Lanza excepción si json_encode falla.
-            }
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $payload); // Añade el JSON al cuerpo de la petición, enviando el payload.
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']); // Configura la cabecera Content-Type para JSON.
-
-            $response = curl_exec($ch); // Ejecuta la petición cURL.
-            curl_close($ch); // Cierra la sesión cURL.
-            if (!is_string($response)) { // Verifica que la respuesta sea una cadena.
-                throw new \RuntimeException('Error en la petición cURL de login'); // Lanza excepción si la respuesta no es válida.
+            // Si estamos en fase MFA, recupera email/password guardados en sesión
+            if ($otp !== '' && isset($_SESSION['mfa_email'], $_SESSION['mfa_password'])) {
+                $email    = (string)$_SESSION['mfa_email'];
+                $password = (string)$_SESSION['mfa_password'];
             }
 
-            /** 
-             * @var array{success: bool, data: array{id:int|string,nombre:string,apellido:string,role:string,token:string}, message?:string} $decoded
-             */
-            $decoded = json_decode($response, true); // Decodifica la respuesta JSON a un array asociativo.
+            $ch = curl_init(API_BASE . 'login.php');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-            if (! $decoded['success']) { // Si la respuesta indica fallo en el login.
-                $error = $decoded['message'] ?? 'Credenciales inválidas.'; // Obtiene el mensaje de error o usa uno genérico.
-                authView('login', ['error' => $error]); // Muestra la vista de login con el error.
-                return; // Termina la ejecución.
+            $payloadArr = ['email' => $email, 'password' => $password];
+            if ($otp !== '') {
+                $payloadArr['otp'] = $otp; // enviar OTP en el segundo paso
             }
 
-            $user     = $decoded['data']; // Extrae los datos del usuario.
-            $id       = is_int($user['id']) ? $user['id'] : (int)$user['id']; // Normaliza el ID del usuario a entero.
-            $nombre   = (string)$user['nombre']; // Normaliza el nombre a string.
-            $apellido = (string)$user['apellido']; // Normaliza el apellido a string.
-            $role     = (string)$user['role']; // Normaliza el rol a string.
-            $token    = (string)$user['token']; // Normaliza el token a string.
+            $payload = json_encode($payloadArr);
+            if ($payload === false) {
+                throw new \RuntimeException('Error serializando JSON de login');
+            }
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
 
-            $_SESSION['user_id']      = $id; // Guarda el ID del usuario en la sesión.
-            $_SESSION['admin_nombre'] = $nombre . ' ' . $apellido; // Guarda el nombre completo en la sesión.
-            $_SESSION['user_role']    = $role; // Guarda el rol del usuario en la sesión.
-            $_SESSION['user_token']   = $token; // Guarda el token en la sesión.
+            $response = curl_exec($ch);
+            curl_close($ch);
+            if (!is_string($response)) {
+                throw new \RuntimeException('Error en la petición cURL de login');
+            }
 
-            $dest = $role === 'administrador' ? 'dashboard' : 'incidencias'; // Redirige según el rol del usuario.
-            header('Location: ' . url($dest)); // Redirige al usuario a la página correspondiente.
-            exit; // Termina la ejecución.
+            /** @var array{success: bool, data?: array<string,mixed>, message?:string} $decoded */
+            $decoded = json_decode($response, true);
+
+            if (empty($decoded['success'])) {
+                $error = $decoded['message'] ?? 'Credenciales inválidas.';
+                authView('login', ['error' => $error]);
+                return;
+            }
+
+            // Si el backend pide OTP:
+            if (!empty($decoded['data']['mfa_required'])) {
+                // Guardar credenciales temporalmente para el segundo paso
+                $_SESSION['mfa_email']    = $email;
+                $_SESSION['mfa_password'] = $password;
+                authView('login_mfa', ['info' => 'Ingresa el código de tu app Authenticator.']);
+                return;
+            }
+
+            // Login final exitoso:
+            $user     = $decoded['data'];
+            $id       = is_int($user['id']) ? $user['id'] : (int)$user['id'];
+            $nombre   = (string)$user['nombre'];
+            $apellido = (string)$user['apellido'];
+            $role     = (string)$user['role'];
+            $token    = (string)$user['token'];
+
+            $_SESSION['user_id']      = $id;
+            $_SESSION['admin_nombre'] = $nombre . ' ' . $apellido;
+            $_SESSION['user_role']    = $role;
+            $_SESSION['user_token']   = $token;
+
+            // Limpiar credenciales MFA temporales si existían
+            unset($_SESSION['mfa_email'], $_SESSION['mfa_password']);
+
+            $dest = $role === 'administrador' ? 'dashboard' : 'incidencias';
+            header('Location: ' . url($dest));
+            exit;
         }
+
+        public function mfaSetup(): void
+        {
+            // Fija el email que se mostrará en el autenticador (mejor si guardas el que inició sesión)
+            $email = $_SESSION['pending_login_email'] ?? ($_SESSION['admin_email'] ?? 'admin@example.com');
+
+            // 1) Secreto Base32 persistido en sesión mientras dura el setup
+            if (empty($_SESSION['mfa_secret'])) {
+                $_SESSION['mfa_secret'] = self::generateBase32Secret(20);
+            }
+            $secret = $_SESSION['mfa_secret'];
+
+            // 2) otpauth URL (lo que codifica el QR)
+            $issuer   = rawurlencode('Sistema Incidencias');
+            $account  = rawurlencode($email);
+            $otpauth  = "otpauth://totp/{$issuer}:{$account}?secret={$secret}&issuer={$issuer}&digits=6&period=30&algorithm=SHA1";
+
+            // 3) URL del QR (servicio público)
+            $qr = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' . rawurlencode($otpauth);
+
+            // 4) Renderiza vista pasando las variables EXACTAS
+            authView('mfa_setup', [
+                'qr'      => $qr,
+                'secret'  => $secret,
+                'otpauth' => $otpauth,
+                'error'   => null,
+            ]);
+        }
+
+        // Helper simple para secreto Base32
+        private static function generateBase32Secret(int $len = 20): string
+        {
+            $alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+            $res = '';
+            for ($i = 0; $i < $len; $i++) {
+                $res .= $alphabet[random_int(0, strlen($alphabet) - 1)];
+            }
+            return $res;
+        }
+
+
+
+        public function mfaVerify(): void
+        {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                header('Location: '.url('auth/mfa-setup')); exit;
+            }
+            $code = isset($_POST['code']) ? trim((string)$_POST['code']) : '';
+
+            $ch = curl_init(API_BASE.'admin_mfa/verify.php');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Authorization: Bearer '.($_SESSION['user_token'] ?? ''),
+                'Content-Type: application/json'
+            ]);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(['code' => $code]));
+            $resp = curl_exec($ch);
+            curl_close($ch);
+
+            $json = is_string($resp) ? json_decode($resp, true) : null;
+            if (is_array($json) && !empty($json['success'])) {
+                // MFA activado; redirige al dashboard
+                header('Location: '.url('dashboard')); exit;
+            }
+
+            $error = $json['message'] ?? 'Código inválido. Inténtalo de nuevo.';
+            authView('mfa_setup', ['error' => $error, 'qr' => null, 'secret' => null, 'email' => null]);
+        }
+
+
 
         public function register(): void // Método para manejar el registro de usuarios
         {

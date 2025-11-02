@@ -5,13 +5,23 @@
     session_start(); // Inicia la sesión para manejar autenticación y datos de usuario.
     require __DIR__ . '/config.php'; // Carga la configuración del sistema.
     require __DIR__ . '/helpers.php'; // Carga funciones helper.
+
+    // --- RUTAS PÚBLICAS (permitidas sin login completo) ---
+    $PUBLIC_ROUTES = [
+    'auth/login',
+    'auth/register',
+    'auth/mfa-setup',
+    'auth/mfa-verify',
+    ];
+
     require __DIR__ . '/middleware/protect.php'; // Protege las rutas que requieren autenticación.
 
     $pathRaw = $_GET['path'] ?? 'dashboard'; // Obtiene el path de la URL, por defecto 'dashboard' si no se especifica.
     $path = is_string($pathRaw) ? trim($pathRaw, '/') : 'dashboard'; // Normaliza el path eliminando barras al inicio y fin.
     $parts   = explode('/', $path); // Divide el path en partes para determinar el módulo y la acción.
     $module  = ucfirst($parts[0]) . 'Controller'; // Convierte la primera parte del path en el nombre del controlador.
-    $action  = $parts[1] ?? 'index'; // La segunda parte del path es la acción, por defecto 'index' si no se especifica.
+    $action  = $parts[1] ?? 'index'; // Obtiene la acción, por defecto 'index' si no se especifica.
+    $action  = preg_replace_callback('/-([a-z])/', fn($m) => strtoupper($m[1]), $action); // Convierte la segunda parte del path en el nombre de la acción, manejando guiones.
 
     $ctrlFile = __DIR__ . "/controllers/{$module}.php"; // Construye la ruta completa al archivo del controlador.
     if (!file_exists($ctrlFile)) { // Verifica si el archivo del controlador existe.

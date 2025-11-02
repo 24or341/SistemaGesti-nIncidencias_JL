@@ -22,38 +22,54 @@ if (!is_array($input)) { // Verifica si la decodificación fue exitosa
 
 $email    = trim((string)($input['email']    ?? '')); // Obtiene el email
 $password = trim((string)($input['password'] ?? '')); // Obtiene la contraseña
+$otp      = trim((string)($input['otp']      ?? '')); // Obtiene el OTP
 
 if ($email === '' || $password === '') { // Verifica si faltan campos
     Response::error("Email y contraseña requeridos", 422); // Envía una respuesta de error
 }
 
-try { // Intenta iniciar sesión como administrador
-    $admin = AdminController::loginRaw($email, $password); // Llama al método de inicio de sesión
-    Response::success([ // Envía una respuesta de éxito
-        'id'       => $admin['id'], // ID del administrador
-        'nombre'   => $admin['nombre'], // Nombre del administrador
-        'apellido' => $admin['apellido'] ?? '', // Apellido del administrador
-        'email'    => $admin['email'], // Email del administrador
-        'dni'      => $admin['dni'] ?? null, // DNI del administrador
-        'role'     => 'administrador', // Rol del usuario
-        'token'    => $admin['token'] // Token de acceso
-    ], "Login administrador exitoso"); // Envía una respuesta de éxito
-} catch (\Exception $e) { // Captura cualquier excepción
-    try { // Intenta iniciar sesión como empleado
-        $emp = EmpleadoController::loginRaw($email, $password); // Llama al método de inicio de sesión
-        if ($emp === null) { // Si no se encuentra el empleado
-            throw new \Exception("No existe"); // Lanza una excepción
+try {
+    // Paso 1: pre-login admin (verifica email+password pero no emite token aún)
+    $adminRow = \App\Services\AdminService::preLogin($email, $password);
+
+    if ($adminRow) {
+        // Si el admin tiene MFA habilitado:
+        if (!empty($adminRow['mfa_enabled'])) {
+            if ($otp === '') {
+                // Pedir OTP (paso 2 en el frontend)
+                Response::success(['mfa_required' => true], "OTP requerido");
+            }
+
+            $ok = \App\Services\AdminService::verificarOtp($adminRow, $otp);
+            if (!$ok) {
+                Response::error("OTP inválido", 401);
+            }
+
+            // OTP válido → emitir token y completar login
+            $payload = \App\Services\AdminService::emitirTokenAdmin($adminRow);
+            Response::success($payload, "Login administrador (MFA) exitoso");
         }
-        Response::success([ // Envía una respuesta de éxito
-            'id'       => $emp['id'], // ID del empleado
-            'nombre'   => $emp['nombre'], // Nombre del empleado
-            'apellido' => $emp['apellido'] ?? '', // Apellido del empleado
-            'email'    => $emp['email'], // Email del empleado
-            'dni'      => $emp['dni'] ?? null, // DNI del empleado
-            'role'     => 'empleado', // Rol del usuario
-            'token'    => $emp['token'] // Token de acceso
-        ], "Login empleado exitoso"); // Envía una respuesta de éxito
-    } catch (\Exception $e2) { // Captura cualquier excepción
-        Response::error("Credenciales inválidas", 401); // Envía una respuesta de error
+
+        // Admin sin MFA → flujo normal
+        $payload = \App\Services\AdminService::emitirTokenAdmin($adminRow);
+        Response::success($payload, "Login administrador exitoso");
     }
+
+    // Si no es admin válido, intenta como empleado (flujo que ya tenías)
+    $emp = \App\Controllers\EmpleadoController::loginRaw($email, $password);
+    if ($emp === null) {
+        throw new \Exception("No existe");
+    }
+    Response::success([
+        'id'       => $emp['id'],
+        'nombre'   => $emp['nombre'],
+        'apellido' => $emp['apellido'] ?? '',
+        'email'    => $emp['email'],
+        'dni'      => $emp['dni'] ?? null,
+        'role'     => 'empleado',
+        'token'    => $emp['token']
+    ], "Login empleado exitoso");
+
+} catch (\Exception $e) {
+    Response::error("Credenciales inválidas", 401);
 }
