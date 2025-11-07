@@ -3,7 +3,7 @@
         'name' => 'proyecto/infraestructura',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '9aead74113ae8594696677a01bd8b1556e1993c7',
+        'reference' => '5342d394f385fcab0999ade341a865f15c4658e4',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -319,7 +319,7 @@
         'proyecto/infraestructura' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '9aead74113ae8594696677a01bd8b1556e1993c7',
+            'reference' => '5342d394f385fcab0999ade341a865f15c4658e4',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

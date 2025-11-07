@@ -1,99 +1,152 @@
 <?php
 declare(strict_types=1);
 
-final class RF02AuthTest extends TestHttp
+use PHPUnit\Framework\TestCase;
+use App\Core\Auth;
+use App\Services\AdminService;
+use RobThree\Auth\TwoFactorAuth;
+
+final class RF02AuthTest extends TestCase
 {
-    private static string $adminEmail;
-    private static string $adminPass = 'Admin#2025';
-    private static string $empEmail;
-    private static string $empPass   = 'Emp#2025';
-
-    public static function setUpBeforeClass(): void
+    /** Limpia cabeceras simuladas */
+    protected function tearDown(): void
     {
-        self::$adminEmail = self::uniqueEmail('admin');
-        self::$empEmail   = self::uniqueEmail('emp');
+        unset($_SERVER['HTTP_AUTHORIZATION'], $_SERVER['Authorization']);
     }
 
-    public function test_RF02_01_registro_admin(): void
+    /** 
+     * 1) Generar y verificar token con claims esperados (id, role, exp).
+     *    Cubre: Auth::generarToken() y Auth::verificarToken()
+     */
+    public function test_token_contiene_claims_y_se_verifica(): void
     {
-        $url = self::api('register.php');
-        $body = json_encode([
-            'role'     => 'administrador',
-            'nombre'   => 'Ana',
-            'apellido' => 'Rojas',
-            'email'    => self::$adminEmail,
-            'password' => self::$adminPass,
-        ], JSON_THROW_ON_ERROR);
+        // Arrange
+        $payload = [
+            'user_id' => 123,
+            'role'    => 'administrador',
+            'email'   => 'admin@test.local',
+            'nombre'  => 'Admin Test',
+        ];
 
-        $r = self::request('POST', $url, ['Content-Type'=>'application/json'], $body);
-        $this->assertSame(200, $r['code']);
-        $this->assertIsArray($r['json']);
-        $this->assertTrue($r['json']['success']);
-        $this->assertIsNumeric($r['json']['data']['id']);
+        // Act
+        $jwt   = Auth::generarToken($payload, 3600);
+        $datos = Auth::verificarToken($jwt);
+
+        // Assert
+        $this->assertSame(123, $datos['user_id']);
+        $this->assertSame('administrador', $datos['role']);
+        $this->assertArrayHasKey('iat', $datos);
+        $this->assertArrayHasKey('exp', $datos);
+        $this->assertGreaterThan($datos['iat'], $datos['exp']); // exp > iat
     }
 
-    public function test_RF02_02_login_admin(): void
+    /**
+     * 2) Extraer Bearer del servidor correctamente.
+     *    Cubre: Auth::extractBearerFromServer()
+     */
+    public function test_extract_bearer_header(): void
     {
-        $url = self::api('login.php');
-        $body = json_encode([
-            'email'    => self::$adminEmail,
-            'password' => self::$adminPass,
-        ], JSON_THROW_ON_ERROR);
+        // Arrange
+        $fakeJwt = 'ey.fake.jwt';
+        $_SERVER['HTTP_AUTHORIZATION'] = 'Bearer ' . $fakeJwt;
 
-        $r = self::request('POST', $url, ['Content-Type'=>'application/json'], $body);
-        $this->assertSame(200, $r['code']);
-        $data = $r['json']['data'];
-        $this->assertEquals('administrador', $data['role']);
-        $this->assertNotEmpty($data['token']);
+        // Act
+        $extracted = Auth::extractBearerFromServer();
 
-        $claims = self::jwtPayload($data['token']);
-        $this->assertArrayHasKey('user_id', $claims);
-        $this->assertEquals('administrador', $claims['role']);
-        $this->assertArrayHasKey('exp', $claims);
+        // Assert
+        $this->assertSame($fakeJwt, $extracted);
     }
 
-    public function test_RF02_03_registro_empleado(): void
+    /**
+     * 3) Emitir credenciales admin coherentes (payload + token válido).
+     *    Cubre: AdminService::emitirTokenAdmin()
+     */
+    public function test_emitir_token_admin_devuelve_payload_valido(): void
     {
-        $url = self::api('register.php');
-        $body = json_encode([
-            'role'     => 'empleado',
-            'nombre'   => 'Luis',
-            'apellido' => 'Mendoza',
-            'dni'      => self::uniqueDni(),
-            'email'    => self::$empEmail,
-            'password' => self::$empPass,
-        ], JSON_THROW_ON_ERROR);
+        // Arrange: simulamos el "row" crudo del admin (preLogin ya lo habría validado)
+        $adminRow = [
+            'id'      => 77,
+            'nombre'  => 'Jorge',
+            'apellido'=> 'Castañeda',
+            'email'   => 'admin@demo.local',
+            'dni'     => '12345678',
+            // mfa_* son irrelevantes para emitir token, pero pueden existir
+            'mfa_enabled' => 0,
+            'mfa_secret'  => null,
+        ];
 
-        $r = self::request('POST', $url, ['Content-Type'=>'application/json'], $body);
-        $this->assertSame(200, $r['code']);
-        $this->assertTrue($r['json']['success']);
-        $this->assertIsNumeric($r['json']['data']['id']);
+        // Act
+        $payload = AdminService::emitirTokenAdmin($adminRow);
+
+        // Assert estructura
+        $this->assertSame(77, $payload['id']);
+        $this->assertSame('Jorge', $payload['nombre']);
+        $this->assertSame('administrador', $payload['role']);
+        $this->assertArrayHasKey('token', $payload);
+
+        // Assert que el token es verificable y con claims coherentes
+        $claims = Auth::verificarToken($payload['token']);
+        $this->assertSame(77, $claims['user_id']);
+        $this->assertSame('administrador', $claims['role']);
+        $this->assertSame('admin@demo.local', $claims['email']);
     }
 
-    public function test_RF02_04_login_empleado(): void
+    /**
+     * 4) Verificación MFA TOTP: código correcto → true.
+     *    Cubre: AdminService::verificarOtp()
+     */
+    public function test_verificar_otp_valido_regresa_true(): void
     {
-        $url = self::api('login.php');
-        $body = json_encode([
-            'email'    => self::$empEmail,
-            'password' => self::$empPass,
-        ], JSON_THROW_ON_ERROR);
+        // Arrange: generamos un secreto y un código válido con el MISMO issuer
+        $tfa    = new TwoFactorAuth('Sistema Incidencias');
+        $secret = $tfa->createSecret(160);
+        $otp    = $tfa->getCode($secret); // código válido para "ahora"
 
-        $r = self::request('POST', $url, ['Content-Type'=>'application/json'], $body);
-        $this->assertSame(200, $r['code']);
-        $this->assertEquals('empleado', $r['json']['data']['role']);
-        $this->assertNotEmpty($r['json']['data']['token']);
+        $adminRow = [
+            'id'          => 7,
+            'nombre'      => 'Admin MFA',
+            'email'       => 'mfa@demo.local',
+            'mfa_enabled' => 1,
+            'mfa_secret'  => $secret,
+        ];
+
+        // Act
+        $ok = AdminService::verificarOtp($adminRow, $otp);
+
+        // Assert
+        $this->assertTrue($ok);
     }
 
-    public function test_RF02_05_login_fallido(): void
+    /**
+     * 5) Verificación MFA TOTP: código inválido → false.
+     *    Cubre: AdminService::verificarOtp()
+     */
+    public function test_verificar_otp_invalido_regresa_false(): void
     {
-        $url = self::api('login.php');
-        $body = json_encode([
-            'email'    => self::$adminEmail,
-            'password' => 'contrasenia_incorrecta',
-        ], JSON_THROW_ON_ERROR);
+        $tfa    = new TwoFactorAuth('Sistema Incidencias');
+        $secret = $tfa->createSecret(160);
 
-        $r = self::request('POST', $url, ['Content-Type'=>'application/json'], $body);
-        $this->assertSame(401, $r['code']);
-        $this->assertFalse($r['json']['success']);
+        $adminRow = [
+            'id'          => 8,
+            'nombre'      => 'Admin MFA',
+            'email'       => 'mfa2@demo.local',
+            'mfa_enabled' => 1,
+            'mfa_secret'  => $secret,
+        ];
+
+        // Código obviamente inválido
+        $ok = AdminService::verificarOtp($adminRow, '000000');
+
+        $this->assertFalse($ok);
+    }
+
+    /**
+     * 6) Token malformado o con firma inválida → excepción.
+     *    Cubre manejo de error en Auth::verificarToken()
+     */
+    public function test_verificar_token_invalido_lanza_excepcion(): void
+    {
+        $this->expectException(Exception::class);
+        Auth::verificarToken('no.es.un.jwt');
     }
 }
