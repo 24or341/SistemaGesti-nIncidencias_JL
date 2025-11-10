@@ -65,7 +65,7 @@ final class RF07_ReportesTest extends TestCase
     }
 
     /**
-     * Inserta una incidencia con los campos mínimos que sabemos que existen en tu tabla.
+     * Inserta una incidencia con los campos mínimos que sabemos que existen en la tabla
      * @return int id de la incidencia creada
      */
     private function crearIncidencia(int $tipoId, int $estadoId, string $fechaISO, string $desc = 'desc'): int
@@ -128,10 +128,10 @@ final class RF07_ReportesTest extends TestCase
             $mapTipo[$r['tipo']] = (int)$r['total'];
         }
 
-        // Verificaciones: 2 Pendiente, 1 Terminado (el "En desarrollo" fue fuera de rango)
+        
         $this->assertSame(2, $mapEstado['Pendiente'] ?? 0);
         $this->assertSame(1, $mapEstado['Terminado']  ?? 0);
-        $this->assertSame(0, $mapEstado['En desarrollo'] ?? 0); // puede que no exista el índice; por eso null-coalesce
+        $this->assertSame(0, $mapEstado['En desarrollo'] ?? 0);
 
         // Por tipo: 2 Bacheo, 1 Alumbrado
         $this->assertSame(2, $mapTipo['Bacheo']   ?? 0);
