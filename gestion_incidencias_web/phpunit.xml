@@ -4,7 +4,7 @@
          verbose="true">
     <testsuites>
         <testsuite name="App Test Suite">
-            <directory>tests/Feature/RF07ReportesTest.php</directory>
+            <directory>tests/Feature/RF09PrioridadTest.php</directory>
         </testsuite>
     </testsuites>
     <php>
