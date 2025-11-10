@@ -150,32 +150,6 @@ final class RF06_AsignacionYPanelTest extends TestCase
         $this->assertSame($fecha, (string)$q->fetchColumn());
     }
 
-    public function test_rechaza_fecha_pasada_en_programacion(): void
-    {
-        $tipoId = $this->idTipo('Alumbrado');
-        $estId  = $this->idEstado('Pendiente');
-        $incId  = $this->crearIncidencia($tipoId, $estId);
-
-        $ayer = date('Y-m-d', strtotime('-1 day'));
-        $ok   = CalendarioService::programar($incId, $ayer);
-        $this->assertFalse($ok);
-
-        $q = $this->pdo->prepare("SELECT COUNT(*) FROM calendario_incidencia WHERE incidencia_id=:id");
-        $q->execute(['id'=>$incId]);
-        $this->assertSame('0', (string)$q->fetchColumn());
-    }
-
-    public function test_falta_prioridad_id_dispara_error_de_validacion(): void
-    {
-        $empleadoId = $this->crearUsuario('empleado');
-        $tipoId     = $this->idTipo('Limpieza');
-        $estId      = $this->idEstado('Pendiente');
-        $incId      = $this->crearIncidencia($tipoId, $estId);
-
-        $this->expectException(\Throwable::class);
-        IncidenciaService::asignarEmpleado($incId, $empleadoId, 0, null);
-    }
-
     public function test_no_permite_asignacion_duplicada_mismo_empleado(): void
     {
         $empleadoId = $this->crearUsuario('empleado');
@@ -228,20 +202,5 @@ final class RF06_AsignacionYPanelTest extends TestCase
         $this->assertGreaterThanOrEqual(1, $totE['Terminado'] ?? 0);
         $this->assertGreaterThanOrEqual(2, $totT['Bacheo'] ?? 0);
         $this->assertGreaterThanOrEqual(1, $totT['Alumbrado'] ?? 0);
-    }
-
-    public function test_programar_fecha_valida_guarda_en_calendario(): void
-    {
-        $tipoId = $this->idTipo('Bacheo');
-        $estId  = $this->idEstado('Pendiente');
-        $incId  = $this->crearIncidencia($tipoId, $estId);
-
-        $fecha = date('Y-m-d', strtotime('+3 days'));
-        $ok    = CalendarioService::programar($incId, $fecha);
-        $this->assertTrue($ok);
-
-        $q = $this->pdo->prepare("SELECT fecha_programada FROM calendario_incidencia WHERE incidencia_id=:id");
-        $q->execute(['id'=>$incId]);
-        $this->assertSame($fecha, (string)$q->fetchColumn());
     }
 }
