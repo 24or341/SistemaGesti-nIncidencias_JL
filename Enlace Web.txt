@@ -1,1 +1,1 @@
-http://20.63.48.78/SistemaGesti-nIncidencias_JL/gestion_incidencias_web/
+http://20.63.24.52/SistemaGesti-nIncidencias_JL/gestion_incidencias_web/
