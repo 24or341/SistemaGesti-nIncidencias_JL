@@ -4,7 +4,7 @@ import '../viewmodels/tareas_viewmodel.dart';
 import 'detalle_incidencia_screen.dart';
 // Realizado por: Leandro Hurtado Ortiz
 // Fecha de creación: 2025-05-10
-// Requerimiento: RF05 – Monitoreo y Actualización de Incidencias
+// Requerimiento: RF05 - Monitoreo de Incidencias asignadas / RF12 - Actualización del estado de la incidencia por empleado
 /// Pantalla que muestra la lista de incidencias asignadas al empleado o todas las incidencias en caso de rol administrador.
 /// Permite:
 /// - Visualizar la descripción, dirección y estado actual de cada incidencia.

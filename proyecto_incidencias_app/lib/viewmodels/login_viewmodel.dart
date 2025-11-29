@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../models/usuario_model.dart';
-
+// Realizado por: Leandro Hurtado Ortiz
+// Fecha de creación: 2025-05-10
+// Requerimiento: RF03 - Autenticación de Empleados
+/// ViewModel (Patrón MVVM con Provider) encargado de gestionar el estado del formulario de Login.
+/// Contiene los datos ingresados por el usuario, el estado de carga (isLoading),
+/// mensajes de error, y la lógica para comunicarse con el AuthService.
+/// Ejecución: Es provisto a la LoginScreen y desencadena la autenticación al llamar a login().
 class LoginViewModel extends ChangeNotifier {
   String _email = '';
   String _password = '';

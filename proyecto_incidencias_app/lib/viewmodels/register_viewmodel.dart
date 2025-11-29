@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
-
+// Realizado por: Leandro Hurtado Ortiz
+// Fecha de creación: 2025-05-10
+// Requerimiento: RF03 - Autenticación de Empleados
+/// ViewModel (Patrón MVVM con Provider) encargado de gestionar el estado del formulario de Registro de Empleados.
+/// Aunque su funcionalidad principal es la alta de nuevos usuarios, es un componente crítico
+/// para el flujo de autenticación, ya que provee las credenciales necesarias para el RF03.
+/// Ejecución: Recibe datos de RegisterScreen y llama a AuthService.register() para la persistencia.
 class RegisterViewModel extends ChangeNotifier {
   String _dni = '';
   String _nombre = '';

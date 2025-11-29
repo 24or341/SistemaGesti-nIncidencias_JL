@@ -1,6 +1,6 @@
 // Realizado por: Leandro Hurtado Ortiz
 // Fecha de creación: 2025-06-07
-// Requerimiento: RF05 – Monitoreo y Actualización de Incidencias / RF08 – Visualización de otras incidencias
+// Requerimiento: RF05 - Monitoreo de Incidencias asignadas / RF08 – Visualización de otras incidencias
 // Modelo de datos que representa una incidencia reportada.
 // Contiene atributos principales:
 // - Identificador, descripción, estado y fecha de reporte.

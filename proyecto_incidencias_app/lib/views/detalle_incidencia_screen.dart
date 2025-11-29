@@ -4,7 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../viewmodels/detalle_incidencia_viewmodel.dart';
 // Realizado por: Leandro Hurtado Ortiz
 // Fecha de creación: 2025-05-10
-// Requerimiento: RF05 – Monitoreo y Actualización de Incidencias
+// Requerimiento: RF05 - Monitoreo de Incidencias asignadas / RF11 - Visualización de incidencias asignadas por empleado
 /// Pantalla para mostrar el detalle completo de una incidencia.
 /// Permite visualizar:
 /// - Descripción, estado y fecha de reporte.

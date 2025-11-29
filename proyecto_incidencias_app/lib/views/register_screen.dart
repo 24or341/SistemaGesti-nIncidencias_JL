@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../viewmodels/register_viewmodel.dart';
 import 'login_screen.dart';
-
+// Realizado por: Leandro Hurtado Ortiz
+// Fecha de creación: 2025-05-10
+// Requerimiento: RF03 - Autenticación de Empleados
+/// Pantalla de registro para nuevos usuarios (empleados/administradores).
+/// Su inclusión aquí es vital para el flujo de UX, ya que permite la creación
+/// de cuentas necesarias antes de poder utilizar la funcionalidad de Login (RF03).
+/// Ejecución: Contiene la opción "Inicia sesión" que redirige al flujo principal de RF03.
 class RegisterScreen extends StatelessWidget {
   RegisterScreen({super.key});
 

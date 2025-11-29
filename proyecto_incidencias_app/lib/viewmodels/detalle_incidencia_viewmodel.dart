@@ -3,7 +3,7 @@ import '../services/incidencias_empleado_service.dart';
 
 // Realizado por: Leandro Hurtado Ortiz
 // Fecha de creación: 2025-06-07
-// Requerimiento: RF05 – Monitoreo y Actualización de Incidencias
+// Requerimiento: RF05 - Monitoreo de Incidencias asignadas / RF11 - Visualización de incidencias asignadas por empleado
 /// ViewModel para la gestión del detalle de una incidencia.
 /// Funciones principales:
 /// - Obtener el detalle de una incidencia según el rol:

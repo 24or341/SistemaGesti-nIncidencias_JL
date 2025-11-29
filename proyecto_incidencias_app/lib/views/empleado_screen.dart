@@ -4,7 +4,7 @@ import 'perfil_screen.dart';
 import '../models/usuario_model.dart';
 // Realizado por: Leandro Hurtado Ortiz
 // Fecha de creación: 2025-05-10
-// Requerimiento: RF05 – Monitoreo y Actualización de Incidencias
+// Requerimiento: RF05 - Monitoreo de Incidencias asignadas
 /// Pantalla principal para empleados con navegación inferior.
 /// Permite alternar entre:
 /// - Vista de tareas asignadas (incidencias que el empleado debe atender).

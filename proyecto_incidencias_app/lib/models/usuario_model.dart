@@ -1,3 +1,11 @@
+// Realizado por: Leandro Hurtado Ortiz
+// Fecha de creación: 2025-05-10
+// Requerimiento: RF03 - Autenticación de Empleados
+/// Modelo de datos (Entidad) que representa a un usuario autenticado en el sistema.
+/// Esta clase es fundamental para:
+/// 1. Deserializar el objeto JSON devuelto por la API de login exitosa.
+/// 2. Almacenar los datos del perfil del usuario (Empleado/Administrador), incluido el JWT.
+/// Ejecución: Utilizado por LoginViewModel para mapear la respuesta del AuthService.
 class Usuario {
   final int id;
   final String nombre;

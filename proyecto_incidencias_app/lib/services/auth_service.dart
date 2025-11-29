@@ -3,7 +3,12 @@ import 'dart:developer' as developer;
 import 'package:http/http.dart' as http;
 import '../config.dart';
 import '../models/usuario_model.dart';
-
+// Realizado por: Leandro Hurtado Ortiz
+// Fecha de creación: 2025-05-10
+// Requerimiento: RF03 - Autenticación de Empleados
+/// Clase de servicio estática responsable de la comunicación con los endpoints de autenticación y gestión de usuarios en el backend (API PHP).
+/// Implementa la lógica de red (llamadas HTTP) y es el punto de conexión entre los ViewModels y la API.
+/// Ejecución: Gestiona la emisión y el uso del Token JWT para peticiones protegidas.
 class AuthService {
   // Método para iniciar sesión (empleados y admins vía login.php)
   static Future<Map<String, dynamic>> login(String email, String password) async {

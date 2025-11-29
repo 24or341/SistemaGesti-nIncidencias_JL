@@ -3,7 +3,13 @@ import 'package:provider/provider.dart';
 import '../viewmodels/login_viewmodel.dart';
 import 'register_screen.dart';
 import 'empleado_screen.dart';
-
+// Realizado por: Leandro Hurtado Ortiz
+// Fecha de creación: 2025-05-10
+// Requerimiento: RF03 - Autenticación de Empleados
+/// Pantalla principal que sirve como Interfaz de Autenticación de Usuarios (Frontera CU03).
+/// Permite al Empleado (o Administrador) ingresar sus credenciales para acceder
+/// al sistema de gestión de incidencias. Incluye validación de formulario y un CAPTCHA
+/// Ejecución: Navegación desde la pantalla principal, y llama a LoginViewModel.login().
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
 

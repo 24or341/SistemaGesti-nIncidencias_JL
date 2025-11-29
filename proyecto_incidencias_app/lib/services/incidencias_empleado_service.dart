@@ -6,7 +6,7 @@ import '../config.dart';
 
 // Realizado por: Leandro Hurtado Ortiz
 // Fecha de creación: 2025-05-10
-// Requerimiento: RF05 – Monitoreo y Actualización de Incidencias
+// Requerimiento: RF05 - Monitoreo de Incidencias asignadas / RF-12 - Actualización del estado de la incidencia por empleado / RF11 - Visualización de incidencias asignadas por empleado
 /// Servicio que conecta la aplicación con la API de empleados/administradores.
 /// Funciones principales:
 /// - Obtener incidencias asignadas a un empleado.
